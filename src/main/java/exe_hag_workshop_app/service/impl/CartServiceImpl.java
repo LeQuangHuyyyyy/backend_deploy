@@ -89,8 +89,6 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.delete(cartItem);
 
         cart.setTotalAmount(calculateTotalAmount(cart.getCartId()));
-
-        cartItemRepository.save(cartItem);
         cartRepository.save(cart);
     }
 

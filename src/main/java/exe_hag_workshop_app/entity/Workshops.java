@@ -29,6 +29,9 @@ public class Workshops {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "price")
     private double price;
 
@@ -40,6 +43,10 @@ public class Workshops {
 
     @Column(name = "url_image")
     private String urlImage;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private WorkshopCategory workshopCategory;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, mappedBy = "workshop")
     private Set<OrderDetails> orderDetails;

@@ -1,6 +1,7 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.entity.Schedule;
+import exe_hag_workshop_app.entity.WorkshopCategory;
 import exe_hag_workshop_app.entity.Workshops;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.WorkshopValidationException;
@@ -8,6 +9,7 @@ import exe_hag_workshop_app.payload.ScheduleRequest;
 import exe_hag_workshop_app.payload.WorkshopRequest;
 import exe_hag_workshop_app.payload.WorkshopResponse;
 import exe_hag_workshop_app.repository.UserRepository;
+import exe_hag_workshop_app.repository.WorkshopCategoryRepository;
 import exe_hag_workshop_app.repository.WorkshopRepository;
 import exe_hag_workshop_app.service.WorkshopService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
@@ -35,6 +37,9 @@ public class WorkshopServiceImp implements WorkshopService {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    WorkshopCategoryRepository workshopCategoryRepository;
 
     private void validateWorkshop(WorkshopRequest request) throws WorkshopValidationException {
         if (request.getWorkshopTitle() == null || request.getWorkshopTitle().trim().isEmpty()) {
@@ -98,8 +103,12 @@ public class WorkshopServiceImp implements WorkshopService {
         WorkshopResponse response = new WorkshopResponse();
         int instructorId = helper.getUserIdFromToken();
 
+        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
+
         Workshops workshops = new Workshops();
         BeanUtils.copyProperties(request, workshops);
+        workshops.setWorkshopCategory(wc);
         workshops.setCreateAt(new Date());
         workshops.setUpdateAt(new Date());
         workshops.setInstructor(userRepo.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found")));
@@ -119,20 +128,23 @@ public class WorkshopServiceImp implements WorkshopService {
         validateWorkshop(request);
 
         for (ScheduleRequest sr : request.getSchedules()) {
-            if (sr.getStartTime() == null || sr.getStartTime().after(new Date())) {
+            if (sr.getStartTime() == null || sr.getStartTime().before(new Date())) {
                 throw new WorkshopValidationException("Schedule start time must be in the future");
             } else if (sr.getEndTime() == null || sr.getEndTime().before(sr.getStartTime())) {
                 throw new WorkshopValidationException("Schedule end time must be after start time");
             }
         }
 
-        Workshops workshop = new Workshops();
-        BeanUtils.copyProperties(request, workshop);
-        workshop.setUpdateAt(new Date());
-        workshop.setCreateAt(existingWorkshop.getCreateAt());
-        workshop = workshopRepository.save(workshop);
-        BeanUtils.copyProperties(workshop, response);
-        response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
+        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
+
+
+        BeanUtils.copyProperties(request, existingWorkshop, "workshopId", "createAt");
+        existingWorkshop.setWorkshopCategory(wc);
+        existingWorkshop.setUpdateAt(new Date());
+        existingWorkshop = workshopRepository.save(existingWorkshop);
+        BeanUtils.copyProperties(existingWorkshop, response);
+        response.setCreateBy(existingWorkshop.getInstructor().getFirstName() + " " + existingWorkshop.getInstructor().getLastName());
         return response;
     }
 

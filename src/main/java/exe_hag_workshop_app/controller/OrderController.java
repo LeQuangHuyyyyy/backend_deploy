@@ -1,9 +1,12 @@
 package exe_hag_workshop_app.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import exe_hag_workshop_app.dto.OrderDTO;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.exception.OrderValidationException;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
+import exe_hag_workshop_app.payload.CreatePaymentLinkRequestBody;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+//Payment imports
+import vn.payos.PayOS;
+import vn.payos.type.CheckoutResponseData;
+import vn.payos.type.ItemData;
+import vn.payos.type.PaymentData;
 
 import java.util.Date;
 import java.util.List;
@@ -22,6 +30,45 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private PayOS payOS;
+
+    @PostMapping(path = "/create")
+    public ObjectNode createPaymentLink(@RequestBody CreatePaymentLinkRequestBody RequestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode response = objectMapper.createObjectNode();
+        try {
+            final String productName = RequestBody.getProductName();
+            final String description = RequestBody.getDescription();
+            final String returnUrl = RequestBody.getReturnUrl();
+            final String cancelUrl = RequestBody.getCancelUrl();
+            final int price = RequestBody.getPrice();
+            // Gen order code
+
+            String currentTimeString = String.valueOf(String.valueOf(new Date().getTime()));
+            long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
+
+            ItemData item = ItemData.builder().name(productName).price(price).quantity(RequestBody.getQuantity()).build();
+
+            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description(description).amount(price).item(item).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
+
+            CheckoutResponseData data = payOS.createPaymentLink(paymentData);
+
+            response.put("error", 0);
+            response.put("message", "success");
+            response.set("data", objectMapper.valueToTree(data));
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("error", -1);
+            response.put("message", "fail");
+            response.set("data", null);
+            return response;
+
+        }
+    }
 
     // CRUD Endpoints
     @GetMapping

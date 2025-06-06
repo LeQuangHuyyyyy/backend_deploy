@@ -17,5 +17,7 @@ public class WorkshopRequest {
     private String description;
     private double price;
     private String urlImage;
+    private String address;
+    private int categoryId;
     private Set<ScheduleRequest> schedules;
 }

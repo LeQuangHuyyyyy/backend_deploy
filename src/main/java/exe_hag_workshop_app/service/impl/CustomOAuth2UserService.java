@@ -42,11 +42,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setEmail(email);
             user.setRole(Roles.USER);
             user = userRepository.save(user);
-            helper.generateToken(user);
         } else {
-            helper.generateToken(existingUser);
+            user = existingUser;
         }
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole())), attributes, "email");
+        if (user != null) {
+            helper.generateToken(user);
+        }
+
+        String role = user != null ? user.getRole().name() : Roles.USER.name();
+        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role)), attributes, "email");
     }
 } 
