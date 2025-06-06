@@ -34,7 +34,7 @@ public class OrderController {
     @Autowired
     private PayOS payOS;
 
-    @PostMapping(path = "/create")
+    @PostMapping(path = "/payment")
     public ObjectNode createPaymentLink(@RequestBody CreatePaymentLinkRequestBody RequestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
