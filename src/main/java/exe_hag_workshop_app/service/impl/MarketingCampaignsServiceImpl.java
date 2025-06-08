@@ -22,11 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.ArrayList;
 
 @Service
@@ -121,7 +119,7 @@ public class MarketingCampaignsServiceImpl implements MarketingCampaignsService 
                             logger.info("Processing category: {} ({})", category.getCategoryId(), category.getCategoryName());
 
                             List<MarketingCampaigns> campaigns = marketingCampaignsRepository
-                                    .findCampaignsWithWorkshopsByCategoryId(category.getCategoryId());
+                                    .findByMarketingCampaignCategory_CategoryId(category.getCategoryId());
                             logger.info("Found {} campaigns for category {}", campaigns.size(), category.getCategoryId());
 
                             // Debug log cho campaigns
