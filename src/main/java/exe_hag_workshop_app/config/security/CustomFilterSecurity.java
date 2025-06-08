@@ -91,6 +91,7 @@ public class CustomFilterSecurity {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
+        // Nếu không có cấu hình allowedOrigins, sử dụng mặc định
         if (allowedOrigins == null || allowedOrigins.length == 0) {
             allowedOrigins = new String[]{"http://localhost:3000", "http://localhost:8080"};
         }

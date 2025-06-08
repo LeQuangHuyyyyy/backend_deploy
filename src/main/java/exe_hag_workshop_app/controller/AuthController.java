@@ -7,6 +7,7 @@ import exe_hag_workshop_app.entity.Enums.Roles;
 import exe_hag_workshop_app.entity.Users;
 import exe_hag_workshop_app.exception.UserValidationException;
 import exe_hag_workshop_app.payload.LoginResponse;
+import exe_hag_workshop_app.payload.RegisterRequest;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.UserService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
@@ -80,19 +81,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            validateUser(userDTO);
-            if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+            validateUser(request);
+            if (userRepository.findByEmail(request.getEmail()) != null) {
                 throw new UserValidationException("Username is already taken");
             }
 
             Users user = new Users();
-            user.setFirstName(userDTO.getFirstName());
-            user.setLastName(userDTO.getLastName());
-            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            user.setEmail(userDTO.getEmail());
-            user.setPhoneNumber(userDTO.getPhone());
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setEmail(request.getEmail());
+            user.setPhoneNumber(request.getPhone());
             user.setRole(Roles.USER);
             user.setActive(true);
             userRepository.save(user);
@@ -109,23 +110,23 @@ public class AuthController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-    private void validateUser(UserDTO userDTO) throws UserValidationException {
-        if (userDTO.getFirstName().trim().isEmpty() || userDTO.getLastName().trim().isEmpty()) {
+    private void validateUser(RegisterRequest request) throws UserValidationException {
+        if (request.getFirstName().trim().isEmpty() || request.getLastName().trim().isEmpty()) {
             throw new UserValidationException("Username cannot be empty");
         }
-        if (userDTO.getPassword() == null || userDTO.getPassword().trim().isEmpty()) {
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
             throw new UserValidationException("Password cannot be empty");
         }
-        if (userDTO.getEmail() == null || userDTO.getEmail().trim().isEmpty()) {
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
             throw new UserValidationException("Email cannot be empty");
         }
-        if (!userDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!request.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new UserValidationException("Invalid email format");
         }
-        if (userDTO.getPassword().length() < 8) {
+        if (request.getPassword().length() < 8) {
             throw new UserValidationException("Password must be at least 8 characters long");
         }
-        if (userDTO.getPhone() != null && !userDTO.getPhone().matches("^\\d{10}$")) {
+        if (request.getPhone() != null && !request.getPhone().matches("^\\d{10}$")) {
             throw new UserValidationException("Invalid phone number format");
         }
     }
