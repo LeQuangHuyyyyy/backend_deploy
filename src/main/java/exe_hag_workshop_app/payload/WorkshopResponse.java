@@ -21,6 +21,7 @@ public class WorkshopResponse {
     private Date createAt;
     private Date updateAt;
     private String urlImage;
+    private String userAccess;
 
     private Set<ScheduleRequest> schedules;
     private String createBy;

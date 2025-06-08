@@ -75,13 +75,11 @@ public class WorkshopServiceImp implements WorkshopService {
                 response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
             }
             if (workshop.getSchedules() != null && !workshop.getSchedules().isEmpty()) {
-                response.setSchedules(workshop.getSchedules().stream()
-                        .map(schedule -> {
-                            ScheduleRequest scheduleRequest = new ScheduleRequest();
-                            BeanUtils.copyProperties(schedule, scheduleRequest);
-                            return scheduleRequest;
-                        })
-                        .collect(Collectors.toSet()));
+                response.setSchedules(workshop.getSchedules().stream().map(schedule -> {
+                    ScheduleRequest scheduleRequest = new ScheduleRequest();
+                    BeanUtils.copyProperties(schedule, scheduleRequest);
+                    return scheduleRequest;
+                }).collect(Collectors.toSet()));
             }
             return response;
         });
@@ -90,8 +88,14 @@ public class WorkshopServiceImp implements WorkshopService {
     @Override
     public WorkshopResponse getWorkshopById(int workshopId) throws ResourceNotFoundException {
         Workshops workshop = workshopRepository.findById(workshopId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found"));
+        if (workshop.getUserAccess() == 0) {
+            workshop.setUserAccess(1);
+        }
+        workshop.setUserAccess(workshop.getUserAccess() + 1);
+        workshopRepository.save(workshop);
         WorkshopResponse response = new WorkshopResponse();
         BeanUtils.copyProperties(workshop, response);
+
         response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
         return response;
     }
@@ -103,8 +107,7 @@ public class WorkshopServiceImp implements WorkshopService {
         WorkshopResponse response = new WorkshopResponse();
         int instructorId = helper.getUserIdFromToken();
 
-        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
+        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
 
         Workshops workshops = new Workshops();
         BeanUtils.copyProperties(request, workshops);
@@ -135,8 +138,7 @@ public class WorkshopServiceImp implements WorkshopService {
             }
         }
 
-        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
+        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
 
 
         BeanUtils.copyProperties(request, existingWorkshop, "workshopId", "createAt");
@@ -187,13 +189,11 @@ public class WorkshopServiceImp implements WorkshopService {
             response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
         }
         if (workshop.getSchedules() != null && !workshop.getSchedules().isEmpty()) {
-            response.setSchedules(workshop.getSchedules().stream()
-                    .map(schedule -> {
-                        ScheduleRequest scheduleRequest = new ScheduleRequest();
-                        BeanUtils.copyProperties(schedule, scheduleRequest);
-                        return scheduleRequest;
-                    })
-                    .collect(Collectors.toSet()));
+            response.setSchedules(workshop.getSchedules().stream().map(schedule -> {
+                ScheduleRequest scheduleRequest = new ScheduleRequest();
+                BeanUtils.copyProperties(schedule, scheduleRequest);
+                return scheduleRequest;
+            }).collect(Collectors.toSet()));
         }
         return response;
     }

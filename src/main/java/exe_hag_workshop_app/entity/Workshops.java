@@ -44,6 +44,9 @@ public class Workshops {
     @Column(name = "url_image")
     private String urlImage;
 
+    @Column(name = "user_access")
+    private int userAccess;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private WorkshopCategory workshopCategory;
