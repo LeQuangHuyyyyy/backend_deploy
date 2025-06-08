@@ -27,6 +27,7 @@ public class JwtTokenHelper {
                 .setSubject("JWT Token")
                 .claim("id", users.getUserId())
                 .claim("role", users.getRole())
+                .claim("username", users.getFirstName() + " " + users.getLastName())
                 .claim("firstName", users.getFirstName())
                 .claim("lastName", users.getLastName())
                 .claim("phone", users.getPhoneNumber())

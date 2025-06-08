@@ -8,6 +8,7 @@ import exe_hag_workshop_app.entity.Users;
 import exe_hag_workshop_app.exception.UserValidationException;
 import exe_hag_workshop_app.payload.LoginResponse;
 import exe_hag_workshop_app.payload.RegisterRequest;
+import exe_hag_workshop_app.payload.ChangePasswordRequest;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.UserService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
@@ -108,6 +109,13 @@ public class AuthController {
     public ResponseEntity<?> logout() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest req) {
+        int userId = jwtTokenHelper.getUserIdFromToken();
+        userService.changePassword(userId, req.getCurrentPassword(), req.getNewPassword());
+        return ResponseEntity.ok("Password updated");
     }
 
     private void validateUser(RegisterRequest request) throws UserValidationException {

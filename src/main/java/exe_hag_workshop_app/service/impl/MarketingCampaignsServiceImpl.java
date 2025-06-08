@@ -1,7 +1,6 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.CategoryWorkshopDTO;
-import exe_hag_workshop_app.dto.WorkshopDTO;
 import exe_hag_workshop_app.entity.MarketingCampaignCategory;
 import exe_hag_workshop_app.entity.MarketingCampaigns;
 import exe_hag_workshop_app.entity.WorkshopMarketingCampaign;
@@ -22,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.ArrayList;
 
 @Service

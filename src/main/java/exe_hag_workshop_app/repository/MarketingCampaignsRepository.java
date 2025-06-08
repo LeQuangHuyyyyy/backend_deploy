@@ -11,5 +11,4 @@ public interface MarketingCampaignsRepository extends JpaRepository<MarketingCam
     List<MarketingCampaigns> findByMarketingCampaignCategory_CategoryId(int categoryId);
 
 
-
 }

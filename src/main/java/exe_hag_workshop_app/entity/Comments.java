@@ -21,7 +21,7 @@ public class Comments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
 
-    @Column(name = "commant_text")
+    @Column(name = "comment_text")
     private String commentText;
 
     @Column(name = "author_name")

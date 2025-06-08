@@ -1,7 +1,14 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.AuthResponse;
+import exe_hag_workshop_app.dto.UserDTO;
+import exe_hag_workshop_app.entity.Users;
+import exe_hag_workshop_app.exception.UserValidationException;
+import exe_hag_workshop_app.payload.UpdateUserRequest;
+import exe_hag_workshop_app.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -16,6 +23,12 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
     @Value("${imagekit.publicKey}")
     private String publicKey;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public AuthResponse getAuth() throws Exception {
         String token = UUID.randomUUID().toString();
         long expire = (System.currentTimeMillis() / 1000L) + 300; // hết hạn sau 5 phút
@@ -23,6 +36,78 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
         String signature = generateSignature(token, String.valueOf(expire), privateKey);
 
         return new AuthResponse(token, signature, String.valueOf(expire), publicKey, null, null, null);
+    }
+
+    @Override
+    public void changePassword(int userId, String currentPassword, String newPassword) throws UserValidationException {
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UserValidationException("User not found");
+        }
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new UserValidationException("Current password is incorrect");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new UserValidationException("Password must be at least 8 characters long");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO updateUserInfo(int userId, UpdateUserRequest request) throws UserValidationException {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserValidationException("User not found"));
+
+        if (request.getFirstName() != null) {
+            if (request.getFirstName().trim().isEmpty()) {
+                throw new UserValidationException("First name cannot be empty");
+            }
+            user.setFirstName(request.getFirstName());
+        }
+
+        if (request.getLastName() != null) {
+            if (request.getLastName().trim().isEmpty()) {
+                throw new UserValidationException("Last name cannot be empty");
+            }
+            user.setLastName(request.getLastName());
+        }
+
+        if (request.getPhone() != null) {
+            if (!request.getPhone().matches("^\\d{10}$")) {
+                throw new UserValidationException("Invalid phone number format");
+            }
+            user.setPhoneNumber(request.getPhone());
+        }
+
+        if (request.getAvatar() != null) {
+            user.setAvatar(request.getAvatar());
+        }
+
+        if (request.getCoverImage() != null) {
+            user.setCoverImage(request.getCoverImage());
+        }
+
+        if (request.getPicture() != null) {
+            user.setPicture(request.getPicture());
+        }
+
+        userRepository.save(user);
+
+        UserDTO dto = new UserDTO();
+        dto.setUserId(user.getUserId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPhone(user.getPhoneNumber());
+        dto.setPassword(user.getPassword());
+        dto.setRole(user.getRole());
+        dto.setActive(user.isActive());
+        dto.setPicture(user.getPicture());
+        return dto;
     }
 
     private String generateSignature(String token, String expire, String secret) throws Exception {

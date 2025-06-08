@@ -103,7 +103,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public double calculateTotalAmount(int cartId) {
-        return cartItemRepository.findAll().stream().filter(item -> item.getCart().getCartId() == cartId).mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+        return cartItemRepository.findByCart_CartId(cartId)
+                .stream()
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .sum();
     }
 
     private Cart createNewCart(int userId) {

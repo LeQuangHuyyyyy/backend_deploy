@@ -93,7 +93,7 @@ public class CustomFilterSecurity {
 
         // Nếu không có cấu hình allowedOrigins, sử dụng mặc định
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:3000", "http://localhost:8080"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080"};
         }
 
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
