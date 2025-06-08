@@ -91,7 +91,6 @@ public class CustomFilterSecurity {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Nếu không có cấu hình allowedOrigins, sử dụng mặc định
         if (allowedOrigins == null || allowedOrigins.length == 0) {
             allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080"};
         }
@@ -107,7 +106,7 @@ public class CustomFilterSecurity {
                 "Access-Control-Request-Method",
                 "Access-Control-Request-Headers"
         ));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L); // Cache CORS config for 1 hour
 
