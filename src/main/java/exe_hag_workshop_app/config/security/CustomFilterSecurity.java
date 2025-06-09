@@ -46,6 +46,8 @@ public class CustomFilterSecurity {
     public static final String[] PUBLIC_URLS = {
             "/api/auth/login",
             "/api/auth/register",
+            "/api/auth/forgot-password",
+            "/api/auth/reset-password",
             "/api/auth/google-login-url",
             "/swagger-ui/**",
             "/api-docs/**",

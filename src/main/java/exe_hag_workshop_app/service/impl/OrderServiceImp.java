@@ -1,7 +1,6 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.OrderDTO;
-import exe_hag_workshop_app.dto.OrderDetailDTO;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.entity.OrderDetails;
 import exe_hag_workshop_app.entity.Orders;
@@ -16,14 +15,11 @@ import exe_hag_workshop_app.repository.OrderRepository;
 import exe_hag_workshop_app.repository.ProductRepository;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.OrderService;
-import org.hibernate.query.Order;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -303,4 +299,42 @@ public class OrderServiceImp implements OrderService {
             return request;
         }).collect(Collectors.toList());
     }
-} 
+
+    @Override
+    public List<OrderRequest> getOrdersByFinishedWorkshop() {
+        return orderRepository.findOrdersByFinishedWorkshop(new Date()).stream().map(order -> {
+          OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(order, request);
+
+            List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+    }
+  
+    @Override
+    public List<OrderRequest> getOrdersByUpcomingWorkshop() {
+        return orderRepository.findOrdersByUpcomingWorkshop(new Date()).stream().map(order -> {
+            OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(order, request);
+
+            List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+    }
+}

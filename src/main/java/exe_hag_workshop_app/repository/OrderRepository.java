@@ -24,4 +24,20 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
     
     @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Orders o WHERE o.orderDate BETWEEN :startDate AND :endDate")
     double calculateTotalRevenue(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
-} 
+
+    @Query("SELECT DISTINCT o FROM Orders o " +
+           "JOIN o.orderDetails od " +
+           "JOIN od.workshop w " +
+           "JOIN w.schedules s " +
+           "WHERE s.startTime > :now")
+    List<Orders> findOrdersByUpcomingWorkshop(@Param("now") Date now);
+
+
+
+    @Query("SELECT DISTINCT o FROM Orders o " +
+            "JOIN o.orderDetails od " +
+            "JOIN od.workshop w " +
+            "JOIN w.schedules s " +
+            "WHERE s.startTime < :now")
+    List<Orders> findOrdersByFinishedWorkshop(@Param("now") Date now);
+}

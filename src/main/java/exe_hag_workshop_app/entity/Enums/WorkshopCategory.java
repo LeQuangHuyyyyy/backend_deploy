@@ -4,13 +4,11 @@ public enum WorkshopCategory {
     ART,
     BUSINESS,
     COOKING,
-    DANCE,
-    DESIGN,
-    EDUCATION,
-    FITNESS,
     MUSIC,
     PHOTOGRAPHY,
     TECHNOLOGY,
-    WRITING,
-    OTHER
+    OTHER,
+    WORKSHOP,
+    MARKETING,
+    PRODUCT,
 }

@@ -3,6 +3,7 @@ package exe_hag_workshop_app.service.impl;
 import exe_hag_workshop_app.dto.AuthResponse;
 import exe_hag_workshop_app.dto.UserDTO;
 import exe_hag_workshop_app.entity.Users;
+import exe_hag_workshop_app.entity.Enums.Roles;
 import exe_hag_workshop_app.exception.UserValidationException;
 import exe_hag_workshop_app.payload.UpdateUserRequest;
 import exe_hag_workshop_app.repository.UserRepository;
@@ -95,6 +96,28 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
             user.setPicture(request.getPicture());
         }
 
+        userRepository.save(user);
+
+        UserDTO dto = new UserDTO();
+        dto.setUserId(user.getUserId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPhone(user.getPhoneNumber());
+        dto.setPassword(user.getPassword());
+        dto.setRole(user.getRole());
+        dto.setActive(user.isActive());
+        dto.setPicture(user.getPicture());
+        return dto;
+    }
+
+    @Override
+    public UserDTO updateUserRole(String email, Roles role) throws UserValidationException {
+        Users user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserValidationException("User not found");
+        }
+        user.setRole(role);
         userRepository.save(user);
 
         UserDTO dto = new UserDTO();

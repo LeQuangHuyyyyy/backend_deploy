@@ -9,8 +9,11 @@ import exe_hag_workshop_app.exception.UserValidationException;
 import exe_hag_workshop_app.payload.LoginResponse;
 import exe_hag_workshop_app.payload.RegisterRequest;
 import exe_hag_workshop_app.payload.ChangePasswordRequest;
+import exe_hag_workshop_app.payload.ForgotPasswordRequest;
+import exe_hag_workshop_app.payload.ResetPasswordRequest;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.UserService;
+import exe_hag_workshop_app.service.PasswordResetService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,8 @@ public class AuthController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    PasswordResetService passwordResetService;
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
@@ -116,6 +121,18 @@ public class AuthController {
         int userId = jwtTokenHelper.getUserIdFromToken();
         userService.changePassword(userId, req.getCurrentPassword(), req.getNewPassword());
         return ResponseEntity.ok("Password updated");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        passwordResetService.generateResetToken(request.getEmail());
+        return ResponseEntity.ok("Reset email sent");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok("Password reset successfully");
     }
 
     private void validateUser(RegisterRequest request) throws UserValidationException {

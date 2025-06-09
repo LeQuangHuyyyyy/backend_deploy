@@ -44,7 +44,6 @@ public class OrderController {
             final String returnUrl = RequestBody.getReturnUrl();
             final String cancelUrl = RequestBody.getCancelUrl();
             final int price = RequestBody.getPrice();
-            // Gen order code
 
             String currentTimeString = String.valueOf(String.valueOf(new Date().getTime()));
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
@@ -165,4 +164,16 @@ public class OrderController {
         List<OrderRequest> orders = orderService.getOrdersByWorkshop(workshopId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
-} 
+
+    @GetMapping("/workshops/finished")
+    public ResponseEntity<?> getOrdersByFinishedWorkshop() {
+        List<OrderRequest> orders = orderService.getOrdersByFinishedWorkshop();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+  
+    @GetMapping("/workshops/upcoming")
+    public ResponseEntity<?> getOrdersByUpcomingWorkshop() {
+        List<OrderRequest> orders = orderService.getOrdersByUpcomingWorkshop();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+}

@@ -33,4 +33,8 @@ public interface OrderService {
     List<OrderRequest> getOrdersByProduct(int productId);
 
     List<OrderRequest> getOrdersByWorkshop(int workshopId);
-} 
+
+    List<OrderRequest> getOrdersByFinishedWorkshop();
+  
+    List<OrderRequest> getOrdersByUpcomingWorkshop();
+}
