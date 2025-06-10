@@ -51,7 +51,6 @@ public class UserController {
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
         dto.setActive(user.isActive());
-        dto.setPicture(user.getPicture());
         return ResponseEntity.ok(dto);
     }
 }
