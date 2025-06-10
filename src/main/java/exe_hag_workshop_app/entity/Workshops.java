@@ -1,6 +1,7 @@
 package exe_hag_workshop_app.entity;
 
 
+import exe_hag_workshop_app.entity.Enums.WorkshopCate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,9 +48,9 @@ public class Workshops {
     @Column(name = "user_access")
     private int userAccess;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private WorkshopCategory workshopCategory;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category_name")
+    private WorkshopCate workshopCategory;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, mappedBy = "workshop")
     private Set<OrderDetails> orderDetails;

@@ -18,6 +18,6 @@ public class WorkshopRequest {
     private double price;
     private String urlImage;
     private String address;
-    private int categoryId;
+    private String category;
     private Set<ScheduleRequest> schedules;
 }

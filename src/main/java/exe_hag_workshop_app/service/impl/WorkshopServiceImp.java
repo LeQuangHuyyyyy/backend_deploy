@@ -1,7 +1,6 @@
 package exe_hag_workshop_app.service.impl;
 
-import exe_hag_workshop_app.entity.Schedule;
-import exe_hag_workshop_app.entity.WorkshopCategory;
+import exe_hag_workshop_app.entity.Enums.WorkshopCate;
 import exe_hag_workshop_app.entity.Workshops;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.WorkshopValidationException;
@@ -9,7 +8,6 @@ import exe_hag_workshop_app.payload.ScheduleRequest;
 import exe_hag_workshop_app.payload.WorkshopRequest;
 import exe_hag_workshop_app.payload.WorkshopResponse;
 import exe_hag_workshop_app.repository.UserRepository;
-import exe_hag_workshop_app.repository.WorkshopCategoryRepository;
 import exe_hag_workshop_app.repository.WorkshopRepository;
 import exe_hag_workshop_app.service.WorkshopService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,9 +34,6 @@ public class WorkshopServiceImp implements WorkshopService {
 
     @Autowired
     UserRepository userRepo;
-
-    @Autowired
-    WorkshopCategoryRepository workshopCategoryRepository;
 
     private void validateWorkshop(WorkshopRequest request) throws WorkshopValidationException {
         if (request.getWorkshopTitle() == null || request.getWorkshopTitle().trim().isEmpty()) {
@@ -107,11 +101,11 @@ public class WorkshopServiceImp implements WorkshopService {
         WorkshopResponse response = new WorkshopResponse();
         int instructorId = helper.getUserIdFromToken();
 
-        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
 
         Workshops workshops = new Workshops();
         BeanUtils.copyProperties(request, workshops);
-        workshops.setWorkshopCategory(wc);
+        WorkshopCate category = WorkshopCate.valueOf(request.getCategory().toUpperCase());
+        workshops.setWorkshopCategory(category);
         workshops.setCreateAt(new Date());
         workshops.setUpdateAt(new Date());
         workshops.setInstructor(userRepo.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found")));
@@ -138,11 +132,9 @@ public class WorkshopServiceImp implements WorkshopService {
             }
         }
 
-        WorkshopCategory wc = workshopCategoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Workshop category not found"));
-
 
         BeanUtils.copyProperties(request, existingWorkshop, "workshopId", "createAt");
-        existingWorkshop.setWorkshopCategory(wc);
+        existingWorkshop.setWorkshopCategory(WorkshopCate.valueOf(request.getCategory()));
         existingWorkshop.setUpdateAt(new Date());
         existingWorkshop = workshopRepository.save(existingWorkshop);
         BeanUtils.copyProperties(existingWorkshop, response);
