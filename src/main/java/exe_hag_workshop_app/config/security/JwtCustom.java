@@ -48,12 +48,14 @@ public class JwtCustom extends OncePerRequestFilter {
         String token = getTokenFromHeader(request);
         if (token != null) {
             if (jwtTokenHelper.verifyToken(token)) {
+
                 SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(secretKey)
                         .build()
                         .parseClaimsJws(token)
                         .getBody();
+
                 String username = String.valueOf(claims.get("username"));
                 String role = String.valueOf(claims.get("role"));
                 ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();

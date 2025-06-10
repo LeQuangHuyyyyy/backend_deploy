@@ -88,14 +88,6 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
             user.setAvatar(request.getAvatar());
         }
 
-        if (request.getCoverImage() != null) {
-            user.setCoverImage(request.getCoverImage());
-        }
-
-        if (request.getPicture() != null) {
-            user.setPicture(request.getPicture());
-        }
-
         userRepository.save(user);
 
         UserDTO dto = new UserDTO();
@@ -107,7 +99,6 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
         dto.setActive(user.isActive());
-        dto.setPicture(user.getPicture());
         return dto;
     }
 
@@ -129,7 +120,6 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
         dto.setActive(user.isActive());
-        dto.setPicture(user.getPicture());
         return dto;
     }
 

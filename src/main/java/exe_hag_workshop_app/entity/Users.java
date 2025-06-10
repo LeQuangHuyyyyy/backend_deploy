@@ -101,9 +101,6 @@ public class Users {
     }, mappedBy = "user")
     private Set<Cart> carts;
 
-    @Column(name = "picture")
-    private String picture;
-
     public Users(int userId) {
         this.userId = userId;
     }
