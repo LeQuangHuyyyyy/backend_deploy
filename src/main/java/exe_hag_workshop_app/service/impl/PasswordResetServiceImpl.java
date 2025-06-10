@@ -38,6 +38,10 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             return;
         }
 
+        if (!user.getEmail().equals(email)) {
+            return;
+        }
+
         String token = UUID.randomUUID().toString();
         PasswordResetToken resetToken = new PasswordResetToken();
 

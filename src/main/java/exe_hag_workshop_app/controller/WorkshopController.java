@@ -112,4 +112,17 @@ public class WorkshopController {
         double revenue = workshopService.calculateWorkshopRevenue(workshopId);
         return new ResponseEntity<>(revenue, HttpStatus.OK);
     }
+
+
+    @PostMapping("/user-access")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> incrementUserAccess(@RequestParam int workshopId) {
+        try {
+            workshopService.incrementUserAccess(workshopId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

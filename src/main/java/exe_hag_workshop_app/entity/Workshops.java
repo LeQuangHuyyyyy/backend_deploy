@@ -59,6 +59,9 @@ public class Workshops {
     @JoinColumn(name = "instructor_id")
     private Users instructor;
 
+    @Column(name = "quantity_access")
+    private long quantityAccess;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "workshop")
     private Set<Materials> materials;
 

@@ -28,4 +28,6 @@ public interface WorkshopService {
     Page<WorkshopResponse> searchWorkshops(String keyword, Pageable pageable);
 
     double calculateWorkshopRevenue(int workshopId);
+
+    void incrementUserAccess(int workshopId) throws ResourceNotFoundException, WorkshopValidationException;
 }
