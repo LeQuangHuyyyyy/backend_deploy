@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class WorkshopController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<?> createWorkshop(@RequestBody WorkshopRequest request) {
         try {
             WorkshopResponse createdWorkshop = workshopService.createWorkshop(request);
@@ -54,6 +56,7 @@ public class WorkshopController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<?> updateWorkshop(@PathVariable("id") int workshopId, @RequestBody WorkshopRequest request) {
         try {
             WorkshopResponse updatedWorkshop = workshopService.updateWorkshop(workshopId, request);
@@ -66,6 +69,7 @@ public class WorkshopController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<?> deleteWorkshop(@PathVariable("id") int workshopId) {
         try {
             workshopService.deleteWorkshop(workshopId);
