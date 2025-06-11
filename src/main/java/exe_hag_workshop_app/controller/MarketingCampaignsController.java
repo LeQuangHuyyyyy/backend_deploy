@@ -62,5 +62,7 @@ public class MarketingCampaignsController {
     public ResponseEntity<?> createCategory(@RequestBody MarketingCampaignsCategoryData category) {
         marketingCampaignsService.createCategory(category);
         return ResponseEntity.ok().build();
+        
+
     }
 }
