@@ -24,9 +24,6 @@ public class Media {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "video_url", nullable = false)
     private String videoUrl;
 

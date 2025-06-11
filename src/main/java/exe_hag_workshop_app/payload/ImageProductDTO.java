@@ -13,5 +13,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ImageProductDTO {
     private String imageUrl;
-    private String description;
 }

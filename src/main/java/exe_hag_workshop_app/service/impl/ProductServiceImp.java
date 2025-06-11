@@ -44,11 +44,7 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
     @Override
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
         try {
-            Pageable sortedPageable = PageRequest.of(
-                    pageable.getPageNumber(),
-                    pageable.getPageSize(),
-                    Sort.by(Sort.Direction.DESC, "price")
-            );
+            Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "price"));
 
             Page<Products> productsPage = productRepository.findAll(sortedPageable);
 
@@ -92,11 +88,9 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
             ProductCategory category = productCategoryRepository.findById(request.getCategoryId()).get();
             product.setCategory(category);
 
-            // Test tạo image product
             ImageProduct imageProduct = new ImageProduct();
-            imageProduct.setImageUrl("test.jpg");
-            imageProduct.setDescription("Test image");
             imageProduct.setProduct(product);
+            imageProduct.setImageUrl(request.getImages().get(0).getImageUrl());
             product.getImages().add(imageProduct);
 
             productRepository.save(product);
@@ -104,6 +98,7 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
             BeanUtils.copyProperties(product, response);
             response.setNameCreateBy(user.getFirstName() + " " + user.getLastName());
             response.setCategoryName(product.getCategory().getCategoryName());
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;

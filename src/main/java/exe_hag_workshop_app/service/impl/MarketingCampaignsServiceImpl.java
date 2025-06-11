@@ -6,11 +6,7 @@ import exe_hag_workshop_app.entity.MarketingCampaigns;
 import exe_hag_workshop_app.entity.WorkshopMarketingCampaign;
 import exe_hag_workshop_app.entity.Workshops;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
-import exe_hag_workshop_app.payload.MarketingCampaignsRequest;
-import exe_hag_workshop_app.payload.MarketingCampaignsResponse;
-import exe_hag_workshop_app.payload.ResponseData;
-import exe_hag_workshop_app.payload.ScheduleRequest;
-import exe_hag_workshop_app.payload.WorkshopResponse;
+import exe_hag_workshop_app.payload.*;
 import exe_hag_workshop_app.repository.MarketingCampaignsCategoryRepository;
 import exe_hag_workshop_app.repository.MarketingCampaignsRepository;
 import exe_hag_workshop_app.service.MarketingCampaignsService;
@@ -198,6 +194,39 @@ public class MarketingCampaignsServiceImpl implements MarketingCampaignsService 
             responseData.setData(List.of());
             return responseData;
         }
+    }
+
+    @Override
+    public ResponseData getAllCategories() {
+        List<MarketingCampaignCategory> categories = categoryRepository.findAll();
+        List<CategoryWorkshopDTO> responseList = categories.stream()
+                .map(category -> {
+                    CategoryWorkshopDTO dto = new CategoryWorkshopDTO();
+                    dto.setCategoryId(category.getCategoryId());
+                    dto.setCategoryName(category.getCategoryName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        ResponseData responseData = new ResponseData();
+        responseData.setStatus(200);
+        responseData.setDescription("Success");
+        responseData.setData(responseList);
+        return responseData;
+    }
+
+    @Override
+    public ResponseData createCategory(MarketingCampaignsCategoryData categoryData) {
+        MarketingCampaignCategory category = new MarketingCampaignCategory();
+        category.setCategoryName(categoryData.getCampaignName());
+
+        categoryRepository.save(category);
+
+        ResponseData responseData = new ResponseData();
+        responseData.setStatus(201);
+        responseData.setDescription("Category created successfully");
+        responseData.setData(categoryData);
+        return responseData;
     }
 
     private MarketingCampaignsResponse convertToResponse(MarketingCampaigns campaign) {

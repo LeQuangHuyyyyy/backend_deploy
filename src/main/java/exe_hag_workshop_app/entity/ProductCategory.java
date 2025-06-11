@@ -22,9 +22,6 @@ public class ProductCategory {
     @Column(name = "category_id")
     private Integer categoryId;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "category_name")
     private String categoryName;
 

@@ -25,9 +25,6 @@ public class MarketingCampaignCategory {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "description")
-    private String description;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH
     }, mappedBy = "marketingCampaignCategory")

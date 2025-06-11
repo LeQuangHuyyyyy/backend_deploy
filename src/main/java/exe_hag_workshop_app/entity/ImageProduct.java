@@ -21,9 +21,6 @@ public class ImageProduct {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Products product;

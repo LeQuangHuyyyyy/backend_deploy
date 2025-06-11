@@ -24,7 +24,6 @@ public class CategoryServiceImp implements CategoryService {
         for (ProductCategory productCategory : object) {
             CategoryDTO dto = new CategoryDTO();
             dto.setCategoryId(productCategory.getCategoryId());
-            dto.setDescription(productCategory.getDescription());
             dto.setCategoryName(productCategory.getCategoryName());
             dtos.add(dto);
         }
@@ -44,7 +43,6 @@ public class CategoryServiceImp implements CategoryService {
             CategoryDTO dto = new CategoryDTO();
             ProductCategory newCate = new ProductCategory();
             newCate.setCategoryName(request.getCategoryName());
-            newCate.setDescription(request.getDescription());
             cateRepo.save(newCate);
 
             BeanUtils.copyProperties(request, dto);
@@ -61,7 +59,6 @@ public class CategoryServiceImp implements CategoryService {
             CategoryDTO dto = new CategoryDTO();
             ProductCategory updateCate = cateRepo.findById(id).get();
             updateCate.setCategoryName(request.getCategoryName());
-            updateCate.setDescription(request.getDescription());
             cateRepo.save(updateCate);
             dto.setCategoryId(id);
 
