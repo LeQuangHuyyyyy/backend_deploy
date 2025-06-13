@@ -14,6 +14,4 @@ public interface MediaService {
     
     MediaDTO getMediaById(Integer mediaId);
     
-    List<MediaDTO> searchMediaByTitle(Integer workshopId, String title);
-    
 }

@@ -1,12 +1,14 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.entity.Enums.WorkshopCate;
+import exe_hag_workshop_app.entity.Schedule;
 import exe_hag_workshop_app.entity.Workshops;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.WorkshopValidationException;
 import exe_hag_workshop_app.payload.ScheduleRequest;
 import exe_hag_workshop_app.payload.WorkshopRequest;
 import exe_hag_workshop_app.payload.WorkshopResponse;
+import exe_hag_workshop_app.repository.ScheduleRepository;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.repository.WorkshopRepository;
 import exe_hag_workshop_app.service.WorkshopService;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +38,8 @@ public class WorkshopServiceImp implements WorkshopService {
 
     @Autowired
     UserRepository userRepo;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     private void validateWorkshop(WorkshopRequest request) throws WorkshopValidationException {
         if (request.getWorkshopTitle() == null || request.getWorkshopTitle().trim().isEmpty()) {
@@ -68,6 +74,7 @@ public class WorkshopServiceImp implements WorkshopService {
             if (workshop.getInstructor() != null) {
                 response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
             }
+
             if (workshop.getSchedules() != null && !workshop.getSchedules().isEmpty()) {
                 response.setSchedules(workshop.getSchedules().stream().map(schedule -> {
                     ScheduleRequest scheduleRequest = new ScheduleRequest();
@@ -84,8 +91,9 @@ public class WorkshopServiceImp implements WorkshopService {
         Workshops workshop = workshopRepository.findById(workshopId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found"));
         if (workshop.getUserAccess() == 0) {
             workshop.setUserAccess(1);
+        } else {
+            workshop.setUserAccess(workshop.getUserAccess() + 1);
         }
-        workshop.setUserAccess(workshop.getUserAccess() + 1);
         workshopRepository.save(workshop);
         WorkshopResponse response = new WorkshopResponse();
         BeanUtils.copyProperties(workshop, response);
@@ -108,11 +116,34 @@ public class WorkshopServiceImp implements WorkshopService {
         workshops.setWorkshopCategory(category);
         workshops.setCreateAt(new Date());
         workshops.setUpdateAt(new Date());
+        workshops.setUserAccess(0);
+
         workshops.setInstructor(userRepo.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found")));
 
         workshopRepository.save(workshops);
+
+
+        Set<ScheduleRequest> schedules = new HashSet<>();
+
+        Schedule schedule = null;
+        for (ScheduleRequest sr : request.getSchedules()) {
+            if (sr.getStartTime() == null || sr.getStartTime().before(new Date())) {
+                throw new WorkshopValidationException("Schedule start time must be in the future");
+            } else if (sr.getEndTime() == null || sr.getEndTime().before(sr.getStartTime())) {
+                throw new WorkshopValidationException("Schedule end time must be after start time");
+            }
+            schedule = new Schedule();
+            BeanUtils.copyProperties(sr, schedule);
+            schedule.setWorkshops(workshops);
+            scheduleRepository.save(schedule);
+
+            schedules.add(sr);
+
+        }
+
         BeanUtils.copyProperties(workshops, response);
         response.setCreateBy(workshops.getInstructor().getFirstName() + " " + workshops.getInstructor().getLastName());
+        response.setSchedules(schedules);
         return response;
 
     }

@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkshopResponse {
+    private int workshopId;
     private String workshopTitle;
     private String description;
     private double price;

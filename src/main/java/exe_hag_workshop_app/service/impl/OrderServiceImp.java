@@ -1,20 +1,16 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.OrderDTO;
+import exe_hag_workshop_app.entity.*;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
-import exe_hag_workshop_app.entity.OrderDetails;
-import exe_hag_workshop_app.entity.Orders;
-import exe_hag_workshop_app.entity.Products;
-import exe_hag_workshop_app.entity.Users;
 import exe_hag_workshop_app.exception.OrderValidationException;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
+import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.payload.ProductInCartRequest;
-import exe_hag_workshop_app.repository.OrderDetailRepository;
-import exe_hag_workshop_app.repository.OrderRepository;
-import exe_hag_workshop_app.repository.ProductRepository;
-import exe_hag_workshop_app.repository.UserRepository;
+import exe_hag_workshop_app.repository.*;
 import exe_hag_workshop_app.service.OrderService;
+import exe_hag_workshop_app.utils.JwtTokenHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,13 +28,19 @@ public class OrderServiceImp implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    OrderDetailRepository orderDetailRepository;
+    JwtTokenHelper jwtTokenHelper;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private DiscountRepository discountRepository;
 
     private void validateOrder(OrderDTO orderDTO) throws OrderValidationException {
         if (orderDTO.getUserId() <= 0) {
@@ -93,22 +95,46 @@ public class OrderServiceImp implements OrderService {
         return request;
     }
 
+
+    //cardid, discountid
     @Override
-    public OrderRequest createOrder(OrderDTO orderDTO) throws OrderValidationException {
-        validateOrder(orderDTO);
+    public OrderRequest createOrder(CreateOrderRequest orderRequest) throws OrderValidationException {
+        Cart cart = cartRepository.findById(orderRequest.getCartId()).orElseThrow(() -> new ResourceNotFoundException("Cart"));
+        String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
+        Users user = userRepository.findById(cart.getUser().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Discounts discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
 
         Orders order = new Orders();
-        order.setOrderDate(new Date());
-        order.setStatus(OrderStatus.PENDING);
-        order.setUser(userRepository.findById(orderDTO.getUserId()).orElseThrow(() -> new OrderValidationException("User not found")));
-        order.setShippingAddress(orderDTO.getShippingAddress());
-        order.setPhoneNumber(orderDTO.getPhoneNumber());
-        order.setTotalAmount(orderDTO.getTotalAmount());
 
-        order = orderRepository.save(order);
+        if (discounts != null) {
+            int percentDiscount = discounts.getDiscountPercentage();
+            order.setTotalAmount(cart.getTotalAmount() * (percentDiscount / 100.0));
+        } else {
+            order.setTotalAmount(cart.getTotalAmount());
+        }
+
+        order.setOrderDate(new Date());
+        order.setCreatedAt(new Date());
+        order.setUpdatedAt(new Date());
+        order.setShippingAddress(orderRequest.getShippingAddress());
+        order.setTotalAmount(cart.getTotalAmount());
+        order.setStatus(OrderStatus.PENDING);
+        order.setPhoneNumber(phoneNumber);
+        order.setDiscounts(discounts);
+        order.setUser(user);
 
         Orders finalOrder = order;
-        List<OrderDetails> orderDetails = getOrderDetail(orderDTO, finalOrder);
+
+        List<OrderDetails> orderDetails = cart.getCartItems().stream().map(cartItem -> {
+            OrderDetails od = new OrderDetails();
+            od.setOrder(finalOrder);
+            od.setProduct(cartItem.getProduct());
+            od.setQuantity(cartItem.getQuantity());
+            od.setUnitPrice(cartItem.getProduct().getPrice());
+            od.setSubtotal(cartItem.getProduct().getPrice() * cartItem.getQuantity());
+            return od;
+        }).collect(Collectors.toList());
+
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
 
@@ -126,57 +152,57 @@ public class OrderServiceImp implements OrderService {
         request.setProductInCartRequests(productInCartList);
         return request;
     }
-
-    @Override
-    public OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException {
-        final Orders existingOrder = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order"));
-
-        validateOrder(orderDTO);
-
-        existingOrder.setShippingAddress(orderDTO.getShippingAddress());
-        existingOrder.setPhoneNumber(orderDTO.getPhoneNumber());
-        existingOrder.setTotalAmount(orderDTO.getTotalAmount());
-
-        List<OrderDetails> orderDetails = getOrderDetail(orderDTO, existingOrder);
-        existingOrder.getOrderDetails().clear();
-        existingOrder.getOrderDetails().addAll(orderDetails);
-
-        orderRepository.save(existingOrder);
-
-        OrderRequest request = new OrderRequest();
-        BeanUtils.copyProperties(existingOrder, request);
-
-        List<ProductInCartRequest> productInCartList = existingOrder.getOrderDetails().stream().map(od -> {
-            ProductInCartRequest re = new ProductInCartRequest();
-            re.setProductId(od.getProduct().getProductId());
-            re.setProductName(od.getProduct().getProductName());
-            re.setQuantity(od.getQuantity());
-            return re;
-        }).collect(Collectors.toList());
-
-        request.setProductInCartRequests(productInCartList);
-        return request;
-    }
-
-    private List<OrderDetails> getOrderDetail(OrderDTO orderDTO, Orders existingOrder) {
-        return orderDTO.getOrderDetails().stream().map(detail -> {
-            OrderDetails od = new OrderDetails();
-            od.setOrder(existingOrder);
-            Products product = productRepository.findById(detail.getProductId()).orElseThrow(() -> new OrderValidationException("Product not found with id"));
-            od.setProduct(product);
-            od.setQuantity(detail.getQuantity());
-            od.setUnitPrice(detail.getUnitPrice());
-            return od;
-        }).collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteOrder(int orderId) throws ResourceNotFoundException {
-        if (!orderRepository.existsById(orderId)) {
-            throw new ResourceNotFoundException("Order not found");
-        }
-        orderRepository.deleteById(orderId);
-    }
+//
+//    @Override
+//    public OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException {
+//        final Orders existingOrder = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order"));
+//
+//        validateOrder(orderDTO);
+//
+//        existingOrder.setShippingAddress(orderDTO.getShippingAddress());
+//        existingOrder.setPhoneNumber(orderDTO.getPhoneNumber());
+//        existingOrder.setTotalAmount(orderDTO.getTotalAmount());
+//
+//        List<OrderDetails> orderDetails = getOrderDetail(orderDTO, existingOrder);
+//        existingOrder.getOrderDetails().clear();
+//        existingOrder.getOrderDetails().addAll(orderDetails);
+//
+//        orderRepository.save(existingOrder);
+//
+//        OrderRequest request = new OrderRequest();
+//        BeanUtils.copyProperties(existingOrder, request);
+//
+//        List<ProductInCartRequest> productInCartList = existingOrder.getOrderDetails().stream().map(od -> {
+//            ProductInCartRequest re = new ProductInCartRequest();
+//            re.setProductId(od.getProduct().getProductId());
+//            re.setProductName(od.getProduct().getProductName());
+//            re.setQuantity(od.getQuantity());
+//            return re;
+//        }).collect(Collectors.toList());
+//
+//        request.setProductInCartRequests(productInCartList);
+//        return request;
+//    }
+//
+//    private List<OrderDetails> getOrderDetail(OrderDTO orderDTO, Orders existingOrder) {
+//        return orderDTO.getOrderDetails().stream().map(detail -> {
+//            OrderDetails od = new OrderDetails();
+//            od.setOrder(existingOrder);
+//            Products product = productRepository.findById(detail.getProductId()).orElseThrow(() -> new OrderValidationException("Product not found with id"));
+//            od.setProduct(product);
+//            od.setQuantity(detail.getQuantity());
+//            od.setUnitPrice(detail.getUnitPrice());
+//            return od;
+//        }).collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public void deleteOrder(int orderId) throws ResourceNotFoundException {
+//        if (!orderRepository.existsById(orderId)) {
+//            throw new ResourceNotFoundException("Order not found");
+//        }
+//        orderRepository.deleteById(orderId);
+//    }
 
     @Override
     public List<OrderRequest> getOrdersByUser(int userId) {
@@ -303,7 +329,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     public List<OrderRequest> getOrdersByFinishedWorkshop() {
         return orderRepository.findOrdersByFinishedWorkshop(new Date()).stream().map(order -> {
-          OrderRequest request = new OrderRequest();
+            OrderRequest request = new OrderRequest();
             BeanUtils.copyProperties(order, request);
 
             List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
@@ -318,7 +344,7 @@ public class OrderServiceImp implements OrderService {
             return request;
         }).collect(Collectors.toList());
     }
-  
+
     @Override
     public List<OrderRequest> getOrdersByUpcomingWorkshop() {
         return orderRepository.findOrdersByUpcomingWorkshop(new Date()).stream().map(order -> {

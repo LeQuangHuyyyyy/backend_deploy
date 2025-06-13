@@ -46,7 +46,7 @@ public class Workshops {
     private String urlImage;
 
     @Column(name = "user_access")
-    private int userAccess;
+    private int userAccess = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_name")
@@ -60,7 +60,7 @@ public class Workshops {
     private Users instructor;
 
     @Column(name = "quantity_access")
-    private Long quantityAccess;
+    private Long quantityAccess = 0L;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "workshop")
     private Set<Materials> materials;

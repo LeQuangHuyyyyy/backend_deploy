@@ -1,14 +1,13 @@
 package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.ProductDTO;
+import exe_hag_workshop_app.entity.*;
 import exe_hag_workshop_app.entity.Enums.Roles;
-import exe_hag_workshop_app.entity.ProductCategory;
-import exe_hag_workshop_app.entity.Products;
-import exe_hag_workshop_app.entity.Users;
-import exe_hag_workshop_app.entity.ImageProduct;
+import exe_hag_workshop_app.exception.WorkshopValidationException;
 import exe_hag_workshop_app.payload.ImageProductDTO;
 import exe_hag_workshop_app.payload.ProductRequest;
 import exe_hag_workshop_app.payload.ProductResponse;
+import exe_hag_workshop_app.payload.ScheduleRequest;
 import exe_hag_workshop_app.repository.ProductCategoryRepository;
 import exe_hag_workshop_app.repository.ProductRepository;
 import exe_hag_workshop_app.repository.UserRepository;
@@ -23,7 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -40,6 +39,9 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
 
     @Autowired
     JwtTokenHelper helper;
+
+    @Autowired
+    ImageProductRepository imageProductRepository;
 
     @Override
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
@@ -87,17 +89,27 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
             product.setCreateBy(user);
             ProductCategory category = productCategoryRepository.findById(request.getCategoryId()).get();
             product.setCategory(category);
-
-            ImageProduct imageProduct = new ImageProduct();
-            imageProduct.setProduct(product);
-            imageProduct.setImageUrl(request.getImages().get(0).getImageUrl());
-            product.getImages().add(imageProduct);
-
             productRepository.save(product);
+
+
+            List<ImageProductDTO> dtos = new ArrayList<>();
+
+            ImageProduct imageProduct = null;
+            for (ImageProductDTO image : request.getImages()) {
+
+                imageProduct = new ImageProduct();
+                BeanUtils.copyProperties(image, imageProduct);
+                imageProduct.setProduct(product);
+                imageProduct.setImageUrl(image.getImageUrl());
+                imageProduct.setProduct(product);
+                imageProductRepository.save(imageProduct);
+                dtos.add(image);
+            }
 
             BeanUtils.copyProperties(product, response);
             response.setNameCreateBy(user.getFirstName() + " " + user.getLastName());
             response.setCategoryName(product.getCategory().getCategoryName());
+            response.setImages(dtos);
 
         } catch (Exception e) {
             e.printStackTrace();

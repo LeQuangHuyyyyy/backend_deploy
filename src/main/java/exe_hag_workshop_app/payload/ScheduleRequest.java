@@ -16,10 +16,6 @@ import java.util.Date;
 
 public class ScheduleRequest {
 
-    private String title;
-
-    private String description;
-
     private Date startTime;
 
     private Date endTime;

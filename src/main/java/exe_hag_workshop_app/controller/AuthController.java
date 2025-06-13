@@ -1,6 +1,7 @@
 package exe_hag_workshop_app.controller;
 
 import exe_hag_workshop_app.dto.AuthResponse;
+import exe_hag_workshop_app.entity.Cart;
 import exe_hag_workshop_app.payload.LoginRequest;
 import exe_hag_workshop_app.dto.UserDTO;
 import exe_hag_workshop_app.entity.Enums.Roles;
@@ -11,12 +12,14 @@ import exe_hag_workshop_app.payload.RegisterRequest;
 import exe_hag_workshop_app.payload.ChangePasswordRequest;
 import exe_hag_workshop_app.payload.ForgotPasswordRequest;
 import exe_hag_workshop_app.payload.ResetPasswordRequest;
+import exe_hag_workshop_app.repository.CartRepository;
 import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.UserService;
 import exe_hag_workshop_app.service.PasswordResetService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,8 +43,12 @@ public class AuthController {
     UserService userService;
     @Autowired
     PasswordResetService passwordResetService;
+
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
+
+    @Autowired
+    CartRepository cartRepository;
 
     @GetMapping
     public ResponseEntity<?> getAuth() throws Exception {
@@ -50,19 +57,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        String jwt;
         try {
             Users users = userRepository.findByEmail(loginRequest.getEmail());
-            if (users != null) {
-                jwt = jwtTokenHelpers.generateToken(users);
+            if (users != null && passwordEncoder.matches(loginRequest.getPassword(), users.getPassword())) {
+                String jwt = jwtTokenHelpers.generateToken(users);
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.setToken(jwt);
                 return ResponseEntity.ok(loginResponse);
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
 
     @GetMapping("/oauth2/success")
@@ -93,6 +99,7 @@ public class AuthController {
             if (userRepository.findByEmail(request.getEmail()) != null) {
                 throw new UserValidationException("Username is already taken");
             }
+            Cart cart = new Cart();
 
             Users user = new Users();
             user.setFirstName(request.getFirstName());
@@ -103,6 +110,10 @@ public class AuthController {
             user.setRole(Roles.USER);
             user.setActive(true);
             userRepository.save(user);
+
+            Users savedUser = user;
+            cart.setUser(savedUser);
+            cartRepository.save(cart);
 
             return ResponseEntity.ok("User registered successfully");
         } catch (UserValidationException e) {

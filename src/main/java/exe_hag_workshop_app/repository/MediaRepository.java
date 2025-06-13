@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface MediaRepository extends JpaRepository<Media, Integer> {
 
-    @Query("SELECT m FROM Media m WHERE m.workshop.workshopId = ?1 AND LOWER(m.title) LIKE LOWER(CONCAT('%', ?2, '%'))")
-    List<Media> searchByTitle(Integer workshopId, String title);
 } 

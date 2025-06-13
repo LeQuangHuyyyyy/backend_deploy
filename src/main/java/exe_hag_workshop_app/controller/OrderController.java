@@ -6,6 +6,7 @@ import exe_hag_workshop_app.dto.OrderDTO;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.exception.OrderValidationException;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
+import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.CreatePaymentLinkRequestBody;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.service.OrderService;
@@ -45,7 +46,7 @@ public class OrderController {
             final String cancelUrl = RequestBody.getCancelUrl();
             final int price = RequestBody.getPrice();
 
-            String currentTimeString = String.valueOf(String.valueOf(new Date().getTime()));
+            String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
             ItemData item = ItemData.builder().name(productName).price(price).quantity(RequestBody.getQuantity()).build();
@@ -87,36 +88,36 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest order) {
         try {
-            OrderRequest createdOrder = orderService.createOrder(orderDTO);
+            OrderRequest createdOrder = orderService.createOrder(order);
             return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
         } catch (OrderValidationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable("id") int orderId, @RequestBody OrderDTO orderDTO) {
-        try {
-            OrderRequest updatedOrder = orderService.updateOrder(orderId, orderDTO);
-            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (OrderValidationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("id") int orderId) {
-        try {
-            orderService.deleteOrder(orderId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateOrder(@PathVariable("id") int orderId, @RequestBody OrderDTO orderDTO) {
+//        try {
+//            OrderRequest updatedOrder = orderService.updateOrder(orderId, orderDTO);
+//            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+//        } catch (ResourceNotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        } catch (OrderValidationException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteOrder(@PathVariable("id") int orderId) {
+//        try {
+//            orderService.deleteOrder(orderId);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } catch (ResourceNotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     // Business Logic Endpoints
     @GetMapping("/user/{userId}")
@@ -170,7 +171,7 @@ public class OrderController {
         List<OrderRequest> orders = orderService.getOrdersByFinishedWorkshop();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
-  
+
     @GetMapping("/workshops/upcoming")
     public ResponseEntity<?> getOrdersByUpcomingWorkshop() {
         List<OrderRequest> orders = orderService.getOrdersByUpcomingWorkshop();

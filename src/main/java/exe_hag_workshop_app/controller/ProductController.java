@@ -19,8 +19,7 @@ public class ProductController {
     ProductService productServiceImp;
 
     @GetMapping
-    public ResponseEntity<?> getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page,
-                                            @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<?> getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
         try {
             ResponseData responseData = new ResponseData();
             Pageable pageable = Pageable.ofSize(size).withPage(page);
@@ -39,6 +38,8 @@ public class ProductController {
             ProductResponse response = productServiceImp.createProduct(request);
             if (response != null) {
                 responseData.setData(response);
+                responseData.setStatus(HttpStatus.CREATED.value());
+                responseData.setDescription("Product created successfully");
                 return new ResponseEntity<>(responseData, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Cannot create Product", HttpStatus.BAD_REQUEST);

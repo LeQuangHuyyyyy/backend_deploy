@@ -1,6 +1,9 @@
 package exe_hag_workshop_app.utils;
 
+import exe_hag_workshop_app.entity.Cart;
 import exe_hag_workshop_app.entity.Users;
+import exe_hag_workshop_app.repository.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -14,13 +17,20 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenHelper {
     @Value("${jwt.secretkey}")
     private String key;
 
+    @Autowired
+    CartRepository cartRepository;
+
+
     public String generateToken(Users users) {
+        Optional<Cart> cart = cartRepository.findByUser_UserId(users.getUserId());
+
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
         return Jwts.builder()
                 .setIssuer("HAG_WORKSHOP")
@@ -31,6 +41,7 @@ public class JwtTokenHelper {
                 .claim("firstName", users.getFirstName())
                 .claim("lastName", users.getLastName())
                 .claim("phone", users.getPhoneNumber())
+                .claim("cartId", cart.map(Cart::getCartId).orElse(null))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date().getTime()) + 28800000))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -76,6 +87,15 @@ public class JwtTokenHelper {
         if (token != null) {
             Claims claims = getClaimsFromToken(token);
             return claims.get("id", Integer.class);
+        }
+        return null;
+    }
+
+    public String getUserPhoneFromToken() {
+        String token = getTokenFromHeader();
+        if (token != null) {
+            Claims claims = getClaimsFromToken(token);
+            return claims.get("phone", String.class);
         }
         return null;
     }

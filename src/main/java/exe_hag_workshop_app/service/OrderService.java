@@ -4,6 +4,7 @@ import exe_hag_workshop_app.dto.OrderDTO;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.OrderValidationException;
+import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.OrderRequest;
 
 import java.util.Date;
@@ -14,11 +15,11 @@ public interface OrderService {
 
     OrderRequest getOrderById(int orderId) throws ResourceNotFoundException;
 
-    OrderRequest createOrder(OrderDTO orderDTO) throws OrderValidationException;
+    OrderRequest createOrder(CreateOrderRequest order) throws OrderValidationException;
 
-    OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException;
-
-    void deleteOrder(int orderId) throws ResourceNotFoundException;
+//    OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException;
+//
+//    void deleteOrder(int orderId) throws ResourceNotFoundException;
 
     List<OrderRequest> getOrdersByUser(int userId);
 

@@ -44,13 +44,4 @@ public class MediaController {
         MediaDTO media = mediaService.getMediaById(mediaId);
         return ResponseEntity.ok(media);
     }
-
-    // Tìm kiếm media theo tiêu đề
-    @GetMapping("/workshop/{workshopId}/search")
-    public ResponseEntity<List<MediaDTO>> searchMediaByTitle(
-            @PathVariable Integer workshopId,
-            @RequestParam String title) {
-        List<MediaDTO> mediaList = mediaService.searchMediaByTitle(workshopId, title);
-        return ResponseEntity.ok(mediaList);
-    }
-} 
+}

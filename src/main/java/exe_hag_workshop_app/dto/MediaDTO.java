@@ -12,10 +12,6 @@ import lombok.NoArgsConstructor;
 public class MediaDTO {
     private int mediaId;
 
-    private String title;
-
-    private String description;
-
     private String videoUrl;
 
     private Integer workshopId;

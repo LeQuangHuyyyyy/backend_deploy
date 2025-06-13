@@ -21,9 +21,6 @@ public class Media {
     @Column(name = "media_id")
     private int mediaId;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
     @Column(name = "video_url", nullable = false)
     private String videoUrl;
 
