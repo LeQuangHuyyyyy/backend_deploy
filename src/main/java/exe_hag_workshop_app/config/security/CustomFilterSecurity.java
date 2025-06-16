@@ -106,7 +106,7 @@ public class CustomFilterSecurity {
         ));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // Cache CORS config for 1 hour
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
