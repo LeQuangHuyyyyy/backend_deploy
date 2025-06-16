@@ -2,7 +2,6 @@ package exe_hag_workshop_app.config.security;
 
 import exe_hag_workshop_app.service.impl.CustomOAuth2UserService;
 import exe_hag_workshop_app.service.impl.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,19 +28,6 @@ public class CustomFilterSecurity {
     @Value("${app.cors.allowed-origins}")
     private String[] allowedOrigins;
 
-    private final JwtCustom jwtCustom;
-    private final CustomUserDetailsService userDetailsService;
-    private final CustomOAuth2UserService customOAuth2UserService;
-
-    @Autowired
-    public CustomFilterSecurity(JwtCustom jwtCustom,
-                                CustomUserDetailsService userDetailsService,
-                                CustomOAuth2UserService customOAuth2UserService) {
-        this.jwtCustom = jwtCustom;
-        this.userDetailsService = userDetailsService;
-        this.customOAuth2UserService = customOAuth2UserService;
-    }
-
     public static final String[] PUBLIC_URLS = {
             "/api/auth/login",
             "/api/auth/register",
@@ -56,7 +42,7 @@ public class CustomFilterSecurity {
     };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtCustom jwtCustom, CustomUserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
