@@ -1,12 +1,16 @@
 package exe_hag_workshop_app.utils;
 
-import exe_hag_workshop_app.entity.Users;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountUtils {
-    public Users getCurrentAccount() {
-        return (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public UserDetails getCurrentAccount() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return (UserDetails) principal;
+        }
+        return null;
     }
 }
