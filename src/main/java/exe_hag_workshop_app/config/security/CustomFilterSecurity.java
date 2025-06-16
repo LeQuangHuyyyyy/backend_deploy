@@ -57,33 +57,33 @@ public class CustomFilterSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll()
+                        .requestMatchers("/api/products/**", "/api/categories/**",
+                                "/api/blogs/**").permitAll()
                         .requestMatchers("/api/cart/**", "/api/orders/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorization")
-                        )
-                        .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/login/oauth2/code/*")
-                        )
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
+                        .authorizationEndpoint(authorization ->
+                                authorization.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(redirection ->
+                                redirection.baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo ->
+                                userInfo.userService(customOAuth2UserService))
                         .defaultSuccessUrl("/api/auth/oauth2/success", true)
                 )
-                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtCustom,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

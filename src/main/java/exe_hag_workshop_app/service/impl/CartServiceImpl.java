@@ -56,6 +56,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public CartDTO addItemToCart(CreateCartItemRequest request) {
         int userId = jwtTokenHelper.getUserIdFromToken();
+        double totalAmount = 0.0;
 
         if (request.getQuantity() <= 0) {
             throw new IllegalArgumentException("quantity must be greater than 0");
@@ -76,6 +77,7 @@ public class CartServiceImpl implements CartService {
                 CartItem existingItem = existingCartItemOpt.get();
                 existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
                 existingItem.setWorkshop(workshop);
+                totalAmount += workshop.getPrice();
                 cartItemRepository.save(existingItem);
             } else {
                 newItem.setCart(cart);
@@ -90,7 +92,8 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("missing product ID in request");
         }
 
-        double totalAmount = calculateTotalAmount(cart.getCartId());
+        totalAmount += calculateTotalAmount(cart.getCartId());
+
         cart.setTotalAmount(totalAmount);
         cartRepository.save(cart);
 
@@ -127,8 +130,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void removeCartItem(int cartItemId) {
         int userId = jwtTokenHelper.getUserIdFromToken();
-        Cart cart = cartRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
+        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
 
         CartItem cartItemToRemove = null;
         for (CartItem item : cart.getCartItems()) {
@@ -155,8 +157,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeCartItemQuantity(int cartItemId) {
         int userId = jwtTokenHelper.getUserIdFromToken();
-        Cart cart = cartRepository.findByUser_UserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
+        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
 
         CartItem cartItemToRemove = null;
 
@@ -185,7 +186,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public double calculateTotalAmount(int cartId) {
-        return cartItemRepository.findByCart_CartId(cartId).stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+        return (cartItemRepository.findByCart_CartId(cartId).stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum());
     }
 
     private Cart createNewCart(int userId) {
