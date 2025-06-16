@@ -10,6 +10,7 @@ import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.CreatePaymentLinkRequestBody;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.payload.ResponseData;
+import exe_hag_workshop_app.repository.WorkshopRepository;
 import exe_hag_workshop_app.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,38 +35,16 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private PayOS payOS;
-
-    @PostMapping(path = "/payment")
-    public ObjectNode createPaymentLink(@RequestBody CreatePaymentLinkRequestBody RequestBody) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode response = objectMapper.createObjectNode();
+    @PostMapping(path = "/workshop-order")
+    public ResponseEntity<?> createPaymentLink(@RequestBody CreatePaymentLinkRequestBody requestBody) {
         try {
-            final String description = RequestBody.getDescription();
-            final String returnUrl = RequestBody.getReturnUrl();
-            final String cancelUrl = RequestBody.getCancelUrl();
-            final int price = RequestBody.getPrice();
-
-            String currentTimeString = String.valueOf(new Date().getTime());
-            long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
-
-            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description(description).amount(price).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
-
-            CheckoutResponseData data = payOS.createPaymentLink(paymentData);
-
-            response.put("error", 0);
-            response.put("message", "success");
-            response.set("data", objectMapper.valueToTree(data));
-            return response;
-
+            ResponseData data = new ResponseData();
+            data.setStatus(200);
+            data.setDescription("Payment link created successfully");
+            data.setData(orderService.createWorkshopOrder(requestBody));
+            return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch (Exception e) {
-            e.printStackTrace();
-            response.put("error", -1);
-            response.put("message", "fail");
-            response.set("data", null);
-            return response;
-
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -102,7 +81,7 @@ public class OrderController {
     @GetMapping("/cancel")
     public ResponseEntity<?> cancelOrder(HttpServletRequest request) {
         try {
-            orderService.cancelOrder(request);
+            orderService.successOrder(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

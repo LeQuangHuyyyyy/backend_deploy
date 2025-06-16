@@ -32,7 +32,4 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Products product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workshop_id")
-    private Workshops workshop;
 } 

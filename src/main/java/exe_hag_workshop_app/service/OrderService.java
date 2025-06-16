@@ -6,6 +6,7 @@ import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.OrderValidationException;
 import exe_hag_workshop_app.payload.CreateOrderRequest;
+import exe_hag_workshop_app.payload.CreatePaymentLinkRequestBody;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.payload.ResponseData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +22,7 @@ public interface OrderService {
 
     ObjectNode createOrder(CreateOrderRequest order) throws OrderValidationException;
 
-//    OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException;
-//
-//    void deleteOrder(int orderId) throws ResourceNotFoundException;
+    ObjectNode createWorkshopOrder(CreatePaymentLinkRequestBody orderRequest);
 
     List<OrderRequest> getOrdersByUser(int userId);
 
@@ -46,4 +45,6 @@ public interface OrderService {
     void cancelOrder(HttpServletRequest request) throws ResourceNotFoundException;
 
     void successOrder(HttpServletRequest request) throws ResourceNotFoundException;
+
+
 }

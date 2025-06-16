@@ -7,10 +7,7 @@ import exe_hag_workshop_app.entity.*;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.exception.OrderValidationException;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
-import exe_hag_workshop_app.payload.CreateOrderRequest;
-import exe_hag_workshop_app.payload.OrderRequest;
-import exe_hag_workshop_app.payload.ProductInCartRequest;
-import exe_hag_workshop_app.payload.ResponseData;
+import exe_hag_workshop_app.payload.*;
 import exe_hag_workshop_app.repository.*;
 import exe_hag_workshop_app.service.OrderService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
@@ -24,6 +21,7 @@ import vn.payos.type.CheckoutResponseData;
 import vn.payos.type.PaymentData;
 
 import java.net.http.HttpRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +47,9 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    @Autowired
+    private WorkshopRepository workshopRepository;
 
     private void validateOrder(OrderDTO orderDTO) throws OrderValidationException {
         if (orderDTO.getUserId() <= 0) {
@@ -103,6 +104,62 @@ public class OrderServiceImp implements OrderService {
         return request;
     }
 
+
+    @Override
+    @Transactional
+    public ObjectNode createWorkshopOrder(CreatePaymentLinkRequestBody orderRequest) throws OrderValidationException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode response = objectMapper.createObjectNode();
+        String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
+        Workshops w = workshopRepository.findById(orderRequest.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("Workshop not found with ID: " + orderRequest.getOrderId()));
+        Users user = userRepository.findById(jwtTokenHelper.getUserIdFromToken()).get();
+
+        Orders order = new Orders();
+        order.setOrderDate(new Date());
+        order.setCreatedAt(new Date());
+        order.setUpdatedAt(new Date());
+        order.setPhoneNumber(phoneNumber);
+        order.setTotalAmount(w.getPrice());
+        order.setUser(user);
+
+        Orders finalOrder = order;
+
+        List<OrderDetails> orderDetails = new ArrayList<>();
+        OrderDetails od = new OrderDetails();
+        od.setOrder(finalOrder);
+        od.setUnitPrice(order.getTotalAmount());
+
+        order.setOrderDetails(orderDetails);
+        order = orderRepository.save(order);
+
+
+        try {
+            final String returnUrl = "http://localhost:8080/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "http://localhost:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final double price = w.getPrice();
+
+            String currentTimeString = String.valueOf(new Date().getTime());
+            long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
+
+            PaymentData paymentData = PaymentData.builder()
+                    .orderCode(orderCode)
+                    .description("thanh toan don hang")
+                    .amount((int) price)
+                    .returnUrl(returnUrl)
+                    .cancelUrl(cancelUrl)
+                    .build();
+
+            CheckoutResponseData data = payOS.createPaymentLink(paymentData);
+
+            response.put("error", 0);
+            response.put("message", "success");
+            response.set("data", objectMapper.valueToTree(data));
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     @Transactional
@@ -202,7 +259,7 @@ public class OrderServiceImp implements OrderService {
         order.setStatus(OrderStatus.COMPLETED);
     }
 
-    //
+//
 //    @Override
 //    public OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException {
 //        final Orders existingOrder = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order"));

@@ -71,11 +71,9 @@ public class CartServiceImpl implements CartService {
 
             CartItem newItem = new CartItem();
             if (existingCartItemOpt.isPresent()) {
-                Workshops workshop = workshopsRepository.findById(request.getWorkshopId()).orElseThrow(() -> new ResourceNotFoundException("cannot find workshop with ID " + request.getWorkshopId()));
 
                 CartItem existingItem = existingCartItemOpt.get();
                 existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
-                existingItem.setWorkshop(workshop);
                 cartItemRepository.save(existingItem);
             } else {
                 newItem.setCart(cart);
@@ -109,11 +107,6 @@ public class CartServiceImpl implements CartService {
             if (!c.getProduct().getImages().isEmpty()) {
                 dto.setProductImage(c.getProduct().getImages().iterator().next().getImageUrl());
             }
-            if (c.getWorkshop() != null) {
-                dto.setWorkshopId(c.getWorkshop().getWorkshopId());
-                dto.setWorkshopTitle(c.getWorkshop().getWorkshopTitle());
-            }
-
             dtos.add(dto);
         }
 
@@ -224,12 +217,6 @@ public class CartServiceImpl implements CartService {
             if (!item.getProduct().getImages().isEmpty()) {
                 dto.setProductImage(item.getProduct().getImages().iterator().next().getImageUrl());
             }
-        }
-
-        if (item.getWorkshop() != null) {
-            dto.setWorkshopId(item.getWorkshop().getWorkshopId());
-            dto.setWorkshopTitle(item.getWorkshop().getWorkshopTitle());
-            // Thêm logic lấy ảnh workshop nếu có
         }
 
         return dto;
