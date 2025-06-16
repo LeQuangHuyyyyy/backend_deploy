@@ -28,21 +28,19 @@ public class CartController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<CartDTO> addItemToCart(
-            @Valid @RequestBody CreateCartItemRequest request) {
+    public ResponseEntity<CartDTO> addItemToCart(@RequestBody CreateCartItemRequest request) {
         return ResponseEntity.ok(cartService.addItemToCart(request));
     }
 
     @DeleteMapping("/items/{cartItemId}")
-    public ResponseEntity<Void> removeCartItem(@PathVariable int cartItemId) {
+    public ResponseEntity<?> removeCartItem(@PathVariable int cartItemId) {
         cartService.removeCartItem(cartItemId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("")
-    public ResponseEntity<Void> clearCart() {
-        int userId = jwtTokenHelper.getUserIdFromToken();
-        cartService.clearCart(userId);
+    @DeleteMapping("/items/quantity/{cartItemId}")
+    public ResponseEntity<Void> removeCartItemByQuantity(@PathVariable int cartItemId) {
+        cartService.removeCartItemQuantity(cartItemId);
         return ResponseEntity.ok().build();
     }
 } 

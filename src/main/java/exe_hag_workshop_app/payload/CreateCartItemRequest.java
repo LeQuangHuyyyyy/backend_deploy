@@ -14,5 +14,6 @@ public class CreateCartItemRequest {
     @Min(value = 1, message = "quantity must be at least 1")
     private int quantity;
     private Integer productId;
+    private Integer workshopId;
 
 }

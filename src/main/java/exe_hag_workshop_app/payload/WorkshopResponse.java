@@ -20,9 +20,10 @@ public class WorkshopResponse {
     private String description;
     private double price;
     private Date createAt;
+    private String address;
     private Date updateAt;
     private String urlImage;
-    private String userAccess;
+    private int userAccess;
 
     private Set<ScheduleRequest> schedules;
     private String createBy;

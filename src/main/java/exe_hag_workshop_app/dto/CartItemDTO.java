@@ -16,5 +16,4 @@ public class CartItemDTO {
     private String productImage;
     private Integer workshopId;
     private String workshopTitle;
-    private String workshopImage;
-} 
+}

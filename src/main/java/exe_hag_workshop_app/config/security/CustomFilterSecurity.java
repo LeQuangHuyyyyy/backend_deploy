@@ -68,7 +68,6 @@ public class CustomFilterSecurity {
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll()
                         .requestMatchers("/api/cart/**", "/api/orders/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

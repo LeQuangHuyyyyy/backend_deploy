@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminUserController {
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PutMapping("/role")
     public ResponseEntity<UserDTO> updateUserRole(@RequestBody UpdateRoleRequest request) {

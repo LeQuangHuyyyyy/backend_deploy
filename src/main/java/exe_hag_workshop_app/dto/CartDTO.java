@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartDTO {
+    private int cartId;
     private Date createdAt;
     private Date updatedAt;
     private double totalAmount;

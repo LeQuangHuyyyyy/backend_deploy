@@ -114,15 +114,15 @@ public class WorkshopController {
     }
 
 
-    @PostMapping("/user-access")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> incrementUserAccess(@RequestParam int workshopId) {
-        try {
-            workshopService.incrementUserAccess(workshopId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PostMapping("/user-access")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<?> incrementUserAccess(@RequestParam int workshopId) {
+//        try {
+//            workshopService.incrementUserAccess(workshopId);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (ResourceNotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 }

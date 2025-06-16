@@ -2,18 +2,21 @@ package exe_hag_workshop_app.service.impl;
 
 import exe_hag_workshop_app.dto.CartDTO;
 import exe_hag_workshop_app.dto.CartItemDTO;
-import exe_hag_workshop_app.payload.CreateCartItemRequest;
 import exe_hag_workshop_app.entity.*;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
+import exe_hag_workshop_app.payload.CreateCartItemRequest;
 import exe_hag_workshop_app.repository.CartItemRepository;
 import exe_hag_workshop_app.repository.CartRepository;
 import exe_hag_workshop_app.repository.ProductRepository;
+import exe_hag_workshop_app.repository.WorkshopRepository;
 import exe_hag_workshop_app.service.CartService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +36,9 @@ public class CartServiceImpl implements CartService {
     @Autowired
     JwtTokenHelper jwtTokenHelper;
 
+    @Autowired
+    WorkshopRepository workshopsRepository;
+
     @Override
 
     public CartDTO getCartByUserId() throws ResourceNotFoundException {
@@ -51,62 +57,135 @@ public class CartServiceImpl implements CartService {
     public CartDTO addItemToCart(CreateCartItemRequest request) {
         int userId = jwtTokenHelper.getUserIdFromToken();
 
+        if (request.getQuantity() <= 0) {
+            throw new IllegalArgumentException("quantity must be greater than 0");
+        }
+
         Cart cart = cartRepository.findByUser_UserId(userId).orElseGet(() -> createNewCart(userId));
 
         if (request.getProductId() != null) {
-            Products product = productsRepository.findById(request.getProductId()).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm"));
+            Products product = productsRepository.findById(request.getProductId()).orElseThrow(() -> new IllegalArgumentException("cannot find cart for user " + request.getProductId()));
 
-            Optional<CartItem> existingCartItem = cartItemRepository.findByCart_CartIdAndProduct_ProductId(cart.getCartId(), product.getProductId());
+            Optional<CartItem> existingCartItemOpt = cartItemRepository.findByCart_CartIdAndProduct_ProductId(cart.getCartId(), product.getProductId());
 
-            if (existingCartItem.isPresent()) {
-                CartItem cartItem = existingCartItem.get();
-                cartItem.setQuantity(cartItem.getQuantity() + request.getQuantity());
-                cartItemRepository.save(cartItem);
+
+            CartItem newItem = new CartItem();
+            if (existingCartItemOpt.isPresent()) {
+                Workshops workshop = workshopsRepository.findById(request.getWorkshopId()).orElseThrow(() -> new ResourceNotFoundException("cannot find workshop with ID " + request.getWorkshopId()));
+
+                CartItem existingItem = existingCartItemOpt.get();
+                existingItem.setQuantity(existingItem.getQuantity() + request.getQuantity());
+                existingItem.setWorkshop(workshop);
+                cartItemRepository.save(existingItem);
             } else {
-                CartItem cartItem = new CartItem();
-                cartItem.setCart(cart);
-                cartItem.setProduct(product);
-                cartItem.setPrice(product.getPrice());
-                cartItem.setQuantity(request.getQuantity());
-                cartItemRepository.save(cartItem);
+                newItem.setCart(cart);
+                newItem.setProduct(product);
+                newItem.setQuantity(request.getQuantity());
+                newItem.setPrice(product.getPrice());
+                cartItemRepository.save(newItem);
             }
+
+
+        } else {
+            throw new IllegalArgumentException("missing product ID in request");
         }
 
-        cart.setTotalAmount(calculateTotalAmount(cart.getCartId()));
+        double totalAmount = calculateTotalAmount(cart.getCartId());
+        cart.setTotalAmount(totalAmount);
         cartRepository.save(cart);
 
-        return convertToDTO(cart);
+        CartDTO cartDTO = new CartDTO();
+        BeanUtils.copyProperties(cart, cartDTO);
+        cartDTO.setTotalAmount(totalAmount);
+
+        List<CartItemDTO> dtos = new ArrayList<>();
+
+
+        for (CartItem c : cart.getCartItems()) {
+            CartItemDTO dto = new CartItemDTO();
+            BeanUtils.copyProperties(c, dto);
+            dto.setProductId(c.getProduct().getProductId());
+            dto.setProductName(c.getProduct().getProductName());
+            if (!c.getProduct().getImages().isEmpty()) {
+                dto.setProductImage(c.getProduct().getImages().iterator().next().getImageUrl());
+            }
+            if (c.getWorkshop() != null) {
+                dto.setWorkshopId(c.getWorkshop().getWorkshopId());
+                dto.setWorkshopTitle(c.getWorkshop().getWorkshopTitle());
+            }
+
+            dtos.add(dto);
+        }
+
+        cartDTO.setCartItems(dtos);
+
+        return cartDTO;
     }
+
 
     @Override
     @Transactional
     public void removeCartItem(int cartItemId) {
         int userId = jwtTokenHelper.getUserIdFromToken();
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
+        Cart cart = cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
 
-        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new IllegalArgumentException(""));
+        CartItem cartItemToRemove = null;
+        for (CartItem item : cart.getCartItems()) {
+            if (item.getCartItemId() == cartItemId) {
+                cartItemToRemove = item;
+                break;
+            }
+        }
 
-        cartItemRepository.delete(cartItem);
+        if (cartItemToRemove == null) {
+            throw new IllegalArgumentException("CartItem not found in user's cart");
+        }
 
+        cart.getCartItems().remove(cartItemToRemove);
+        cartItemToRemove.setCart(null);
+        cartItemRepository.delete(cartItemToRemove);
         cart.setTotalAmount(calculateTotalAmount(cart.getCartId()));
         cartRepository.save(cart);
+
+        System.out.println("oke");
     }
 
+
     @Override
-    @Transactional
-    public void clearCart(int userId) {
-        Cart cart = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy giỏ hàng"));
-        cartItemRepository.deleteByCart_CartId(cart.getCartId());
-        cart.setTotalAmount(0.0);
-        cartRepository.save(cart);
+    public void removeCartItemQuantity(int cartItemId) {
+        int userId = jwtTokenHelper.getUserIdFromToken();
+        Cart cart = cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("cannot find cart for user"));
+
+        CartItem cartItemToRemove = null;
+
+        for (CartItem item : cart.getCartItems()) {
+            if (item.getCartItemId() == cartItemId) {
+                cartItemToRemove = item;
+                break;
+            }
+        }
+        if (cartItemToRemove == null) {
+            throw new IllegalArgumentException("CartItem not found in user's cart");
+        }
+
+        if (cartItemToRemove.getQuantity() > 1) {
+            cartItemToRemove.setQuantity(cartItemToRemove.getQuantity() - 1);
+            cartItemRepository.save(cartItemToRemove);
+        } else {
+            cart.getCartItems().remove(cartItemToRemove);
+            cartItemToRemove.setCart(null);
+            cartItemRepository.delete(cartItemToRemove);
+            cart.setTotalAmount(calculateTotalAmount(cart.getCartId()));
+            cartRepository.save(cart);
+        }
+
     }
 
     @Override
     public double calculateTotalAmount(int cartId) {
-        return cartItemRepository.findByCart_CartId(cartId)
-                .stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+        return cartItemRepository.findByCart_CartId(cartId).stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
     }
 
     private Cart createNewCart(int userId) {
@@ -118,13 +197,16 @@ public class CartServiceImpl implements CartService {
     private CartDTO convertToDTO(Cart cart) {
 
         CartDTO dto = new CartDTO();
-
+        dto.setCartId(cart.getCartId());
         dto.setCreatedAt(cart.getCreatedAt());
         dto.setUpdatedAt(cart.getUpdatedAt());
         dto.setTotalAmount(cart.getTotalAmount());
 
         List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(this::convertToCartItemDTO).collect(Collectors.toList());
         dto.setCartItems(cartItemDTOs);
+
+//        List<CartItemDTO> cartItemDTOs = cart.getCartItems() == null ? List.of() : cart.getCartItems().stream().map(this::convertToCartItemDTO).collect(Collectors.toList());
+//        dto.setCartItems(cartItemDTOs);
 
         return dto;
     }

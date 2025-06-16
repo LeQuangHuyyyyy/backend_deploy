@@ -9,7 +9,9 @@ import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.CreatePaymentLinkRequestBody;
 import exe_hag_workshop_app.payload.OrderRequest;
+import exe_hag_workshop_app.payload.ResponseData;
 import exe_hag_workshop_app.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,6 @@ public class OrderController {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            final String productName = RequestBody.getProductName();
             final String description = RequestBody.getDescription();
             final String returnUrl = RequestBody.getReturnUrl();
             final String cancelUrl = RequestBody.getCancelUrl();
@@ -49,9 +50,7 @@ public class OrderController {
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
-            ItemData item = ItemData.builder().name(productName).price(price).quantity(RequestBody.getQuantity()).build();
-
-            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description(description).amount(price).item(item).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
+            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description(description).amount(price).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
 
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
 
@@ -90,11 +89,34 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest order) {
         try {
-            OrderRequest createdOrder = orderService.createOrder(order);
-            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+            ResponseData data = new ResponseData();
+            data.setData(orderService.createOrder(order));
+            data.setStatus(200);
+            data.setDescription("Order created successfully");
+            return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch (OrderValidationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/cancel")
+    public ResponseEntity<?> cancelOrder(HttpServletRequest request) {
+        try {
+            orderService.cancelOrder(request);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return null;
+    }
+
+    @GetMapping("success")
+    public ResponseEntity<?> successOrder(HttpServletRequest request) {
+        try {
+            orderService.cancelOrder(request);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return null;
     }
 
 //    @PutMapping("/{id}")

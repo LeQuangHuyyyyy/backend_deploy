@@ -56,14 +56,6 @@ public class WorkshopServiceImp implements WorkshopService {
         }
     }
 
-    private List<WorkshopResponse> getWorkshopResponses(List<Workshops> workshops) {
-        return workshops.stream().map(ws -> {
-            WorkshopResponse response = new WorkshopResponse();
-            BeanUtils.copyProperties(ws, response);
-            response.setCreateBy(ws.getInstructor().getFirstName() + " " + ws.getInstructor().getLastName());
-            return response;
-        }).collect(Collectors.toList());
-    }
 
     @Override
     public Page<WorkshopResponse> getAllWorkshops(Pageable pageable) {
@@ -82,6 +74,10 @@ public class WorkshopServiceImp implements WorkshopService {
                     return scheduleRequest;
                 }).collect(Collectors.toSet()));
             }
+
+            response.setUserAccess(workshop.getUserAccess());
+
+
             return response;
         });
     }
@@ -97,6 +93,14 @@ public class WorkshopServiceImp implements WorkshopService {
         workshopRepository.save(workshop);
         WorkshopResponse response = new WorkshopResponse();
         BeanUtils.copyProperties(workshop, response);
+
+        if (workshop.getSchedules() != null && !workshop.getSchedules().isEmpty()) {
+            response.setSchedules(workshop.getSchedules().stream().map(schedule -> {
+                ScheduleRequest scheduleRequest = new ScheduleRequest();
+                BeanUtils.copyProperties(schedule, scheduleRequest);
+                return scheduleRequest;
+            }).collect(Collectors.toSet()));
+        }
 
         response.setCreateBy(workshop.getInstructor().getFirstName() + " " + workshop.getInstructor().getLastName());
         return response;

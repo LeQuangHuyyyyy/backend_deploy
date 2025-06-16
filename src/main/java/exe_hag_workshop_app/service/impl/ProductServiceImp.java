@@ -80,7 +80,7 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
         ProductResponse response = new ProductResponse();
         try {
             Users user = userRepository.findById(id).get();
-            if (user.getRole() != Roles.ADMIN) {
+            if (user.getRole() != Roles.INSTRUCTOR) {
                 return null;
             }
             product.setProductName(request.getProductName());
@@ -163,11 +163,21 @@ public class ProductServiceImp implements exe_hag_workshop_app.service.ProductSe
     public ProductResponse getProductById(int productId) {
         Products product;
         ProductResponse response = new ProductResponse();
+
         try {
             product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
             BeanUtils.copyProperties(product, response);
             response.setNameCreateBy(product.getCreateBy().getFirstName() + " " + product.getCreateBy().getLastName());
             response.setCategoryName(product.getCategory().getCategoryName());
+
+            List<ImageProductDTO> imageUrls = product.getImages().stream().map(imageProduct -> {
+                ImageProductDTO imageDTO = new ImageProductDTO();
+                BeanUtils.copyProperties(imageProduct, imageDTO);
+                return imageDTO;
+            }).collect(Collectors.toList());
+
+            response.setImages(imageUrls);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;

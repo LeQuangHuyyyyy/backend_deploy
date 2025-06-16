@@ -1,5 +1,7 @@
 package exe_hag_workshop_app.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import exe_hag_workshop_app.dto.OrderDTO;
 import exe_hag_workshop_app.entity.*;
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
@@ -8,14 +10,20 @@ import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.payload.CreateOrderRequest;
 import exe_hag_workshop_app.payload.OrderRequest;
 import exe_hag_workshop_app.payload.ProductInCartRequest;
+import exe_hag_workshop_app.payload.ResponseData;
 import exe_hag_workshop_app.repository.*;
 import exe_hag_workshop_app.service.OrderService;
 import exe_hag_workshop_app.utils.JwtTokenHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vn.payos.PayOS;
+import vn.payos.type.CheckoutResponseData;
+import vn.payos.type.PaymentData;
 
+import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +42,7 @@ public class OrderServiceImp implements OrderService {
     UserRepository userRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private PayOS payOS;
 
     @Autowired
     private CartRepository cartRepository;
@@ -96,9 +104,9 @@ public class OrderServiceImp implements OrderService {
     }
 
 
-    //cardid, discountid
     @Override
-    public OrderRequest createOrder(CreateOrderRequest orderRequest) throws OrderValidationException {
+    @Transactional
+    public ObjectNode createOrder(CreateOrderRequest orderRequest) throws OrderValidationException {
         Cart cart = cartRepository.findById(orderRequest.getCartId()).orElseThrow(() -> new ResourceNotFoundException("Cart"));
         String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
         Users user = userRepository.findById(cart.getUser().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -150,9 +158,51 @@ public class OrderServiceImp implements OrderService {
         }).collect(Collectors.toList());
 
         request.setProductInCartRequests(productInCartList);
-        return request;
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode response = objectMapper.createObjectNode();
+        try {
+            final String returnUrl = "http://localhost:8080/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "http://localhost:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final int price = (int) cart.getTotalAmount();
+
+            String currentTimeString = String.valueOf(new Date().getTime());
+            long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
+
+            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description("Thanh toan don hang").amount(price).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
+
+            CheckoutResponseData data = payOS.createPaymentLink(paymentData);
+
+            response.put("error", 0);
+            response.put("message", "success");
+            response.set("data", objectMapper.valueToTree(data));
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("error", -1);
+            response.put("message", "fail");
+            response.set("data", null);
+            return response;
+        }
     }
-//
+
+    @Override
+    public void cancelOrder(HttpServletRequest request) throws ResourceNotFoundException {
+        String orderId = request.getParameter("orderId");
+        Orders order = orderRepository.findById(Integer.parseInt(orderId)).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus(OrderStatus.CANCELLED);
+    }
+
+    @Override
+    public void successOrder(HttpServletRequest request) throws ResourceNotFoundException {
+        String orderId = request.getParameter("orderId");
+        Orders order = orderRepository.findById(Integer.parseInt(orderId)).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus(OrderStatus.COMPLETED);
+    }
+
+    //
 //    @Override
 //    public OrderRequest updateOrder(int orderId, OrderDTO orderDTO) throws ResourceNotFoundException, OrderValidationException {
 //        final Orders existingOrder = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order"));

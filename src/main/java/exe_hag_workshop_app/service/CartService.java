@@ -10,7 +10,7 @@ public interface CartService {
 
     void removeCartItem(int cartItemId);
 
-    void clearCart(int userId);
+    void removeCartItemQuantity(int cartItemId);
 
     double calculateTotalAmount(int cartId);
 } 
