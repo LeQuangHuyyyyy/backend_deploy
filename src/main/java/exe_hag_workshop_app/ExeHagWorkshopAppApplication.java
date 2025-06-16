@@ -19,13 +19,13 @@ public class ExeHagWorkshopAppApplication implements WebMvcConfigurer {
     }
 
     @Value("${PAYOS_CLIENT_ID}")
-    private String clientId = "da0dea87-5d0c-41ba-9daa-3be9fbb9be36";
+    private String clientId;
 
     @Value("${PAYOS_API_KEY}")
-    private String apiKey = "fa8cf150-b742-409c-b87b-89cecda0b83b";
+    private String apiKey;
 
     @Value("${PAYOS_CHECKSUM_KEY}")
-    private String checksumKey = "25b5e97d33c1b7ac47bdf933b9834272685b0630962016a2265cb4b8f461d2a2";
+    private String checksumKey;
 
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {

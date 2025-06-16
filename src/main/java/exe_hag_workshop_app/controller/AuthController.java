@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class AuthController {
 
+    @Autowired
+    JwtTokenHelper jwtTokenHelpers;
 
     @Autowired
     UserRepository userRepository;
@@ -58,7 +60,7 @@ public class AuthController {
         try {
             Users users = userRepository.findByEmail(loginRequest.getEmail());
             if (users != null && passwordEncoder.matches(loginRequest.getPassword(), users.getPassword())) {
-                String jwt = jwtTokenHelper.generateToken(users);
+                String jwt = jwtTokenHelpers.generateToken(users);
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.setToken(jwt);
                 return ResponseEntity.ok(loginResponse);
