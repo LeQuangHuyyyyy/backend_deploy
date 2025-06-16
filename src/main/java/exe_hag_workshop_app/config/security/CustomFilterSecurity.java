@@ -28,6 +28,18 @@ public class CustomFilterSecurity {
     @Value("${app.cors.allowed-origins}")
     private String[] allowedOrigins;
 
+    private final JwtCustom jwtCustom;
+    private final CustomUserDetailsService userDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public CustomFilterSecurity(JwtCustom jwtCustom,
+                                CustomUserDetailsService userDetailsService,
+                                CustomOAuth2UserService customOAuth2UserService) {
+        this.jwtCustom = jwtCustom;
+        this.userDetailsService = userDetailsService;
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
     public static final String[] PUBLIC_URLS = {
             "/api/auth/login",
             "/api/auth/register",
@@ -42,7 +54,7 @@ public class CustomFilterSecurity {
     };
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtCustom jwtCustom, CustomUserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
