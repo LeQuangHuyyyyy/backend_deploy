@@ -14,4 +14,6 @@ public interface UserService {
     UserDTO updateUserInfo(int userId, UpdateUserRequest request) throws UserValidationException;
 
     UserDTO updateUserRole(String email, Roles role) throws UserValidationException;
+
+    UserDTO getUserById(int userId);
 }

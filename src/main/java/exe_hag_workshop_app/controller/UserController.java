@@ -50,6 +50,7 @@ public class UserController {
         dto.setPhone(user.getPhoneNumber());
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
+        dto.setAvatarUrl(user.getAvatar());
         dto.setActive(user.isActive());
         return ResponseEntity.ok(dto);
     }

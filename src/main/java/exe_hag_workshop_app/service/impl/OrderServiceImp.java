@@ -111,7 +111,7 @@ public class OrderServiceImp implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
-        Workshops w = workshopRepository.findById(orderRequest.getOrderId()).orElseThrow(() -> new ResourceNotFoundException("Workshop not found with ID: " + orderRequest.getOrderId()));
+        Workshops w = workshopRepository.findById(orderRequest.getWorkshopId()).orElseThrow(() -> new ResourceNotFoundException("Workshop not found with ID: " + orderRequest.getWorkshopId()));
         Users user = userRepository.findById(jwtTokenHelper.getUserIdFromToken()).get();
 
         Orders order = new Orders();

@@ -99,6 +99,7 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
         dto.setActive(user.isActive());
+        dto.setAvatarUrl(user.getAvatar());
         return dto;
     }
 
@@ -110,6 +111,23 @@ public class UserServiceImp implements exe_hag_workshop_app.service.UserService 
         }
         user.setRole(role);
         userRepository.save(user);
+
+        UserDTO dto = new UserDTO();
+        dto.setUserId(user.getUserId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPhone(user.getPhoneNumber());
+        dto.setPassword(user.getPassword());
+        dto.setRole(user.getRole());
+        dto.setActive(user.isActive());
+        return dto;
+    }
+
+    @Override
+    public UserDTO getUserById(int userId) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserValidationException("User not found"));
 
         UserDTO dto = new UserDTO();
         dto.setUserId(user.getUserId());

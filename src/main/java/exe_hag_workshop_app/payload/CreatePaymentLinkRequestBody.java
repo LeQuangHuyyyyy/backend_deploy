@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreatePaymentLinkRequestBody {
-    private int orderId;
+    private int workshopId;
 }

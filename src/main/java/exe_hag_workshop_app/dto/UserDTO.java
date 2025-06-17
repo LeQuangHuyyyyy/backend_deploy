@@ -13,7 +13,6 @@ public class UserDTO {
     private String password;
     private Roles role;
     private Boolean active;
-    private String picture;
-    private Boolean emailVerified;
+    private String avatarUrl;
     private String locale;
 }
