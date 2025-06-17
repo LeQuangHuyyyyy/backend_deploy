@@ -97,7 +97,6 @@ public class CustomFilterSecurity {
         }
 
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization",
