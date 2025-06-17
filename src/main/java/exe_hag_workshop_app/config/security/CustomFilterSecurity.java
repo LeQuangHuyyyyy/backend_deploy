@@ -92,7 +92,7 @@ public class CustomFilterSecurity {
         CorsConfiguration configuration = new CorsConfiguration();
 
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app"};
         }
 
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
