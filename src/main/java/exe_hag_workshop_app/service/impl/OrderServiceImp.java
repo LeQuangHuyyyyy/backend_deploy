@@ -220,8 +220,8 @@ public class OrderServiceImp implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            final String returnUrl = "http://localhost:8080/api/orders/payment/success?orderId=" + order.getOrderId();
-            final String cancelUrl = "http://localhost:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final String returnUrl = "http://34.96.206.251:8080/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "http://34.96.206.251:8080/api/orders/cancel?orderId=" + order.getOrderId();
             final int price = (int) cart.getTotalAmount();
 
             String currentTimeString = String.valueOf(new Date().getTime());

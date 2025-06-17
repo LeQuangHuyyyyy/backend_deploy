@@ -72,22 +72,27 @@ public class OrderController {
 
     @GetMapping("/cancel")
     public ResponseEntity<?> cancelOrder(HttpServletRequest request) {
+        ResponseData data = new ResponseData();
         try {
+            data.setDescription("Order cancelled successfully");
             orderService.successOrder(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return null;
+        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("success")
     public ResponseEntity<?> successOrder(HttpServletRequest request) {
+        ResponseData data = new ResponseData();
+
         try {
+            data.setDescription("Order successfully");
             orderService.cancelOrder(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return null;
+        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
     }
 
 //    @PutMapping("/{id}")
