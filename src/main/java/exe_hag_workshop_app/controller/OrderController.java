@@ -11,11 +11,13 @@ import exe_hag_workshop_app.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -75,11 +77,13 @@ public class OrderController {
         ResponseData data = new ResponseData();
         try {
             data.setDescription("Order cancelled successfully");
-            orderService.successOrder(request);
+            orderService.cancelOrder(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("https://hagworkshop.site/order-failed"));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("success")
@@ -88,36 +92,20 @@ public class OrderController {
 
         try {
             data.setDescription("Order successfully");
-            orderService.cancelOrder(request);
+            orderService.successOrder(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("https://hagworkshop.site/order-success"));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateOrder(@PathVariable("id") int orderId, @RequestBody OrderDTO orderDTO) {
-//        try {
-//            OrderRequest updatedOrder = orderService.updateOrder(orderId, orderDTO);
-//            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
-//        } catch (ResourceNotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        } catch (OrderValidationException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
 //
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteOrder(@PathVariable("id") int orderId) {
-//        try {
-//            orderService.deleteOrder(orderId);
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } catch (ResourceNotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
+//
+//
+//
 
-    // Business Logic Endpoints
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getOrdersByUser(@PathVariable("userId") int userId) {
         List<OrderRequest> orders = orderService.getOrdersByUser(userId);
