@@ -29,5 +29,6 @@ public interface WorkshopService {
 
     double calculateWorkshopRevenue(int workshopId);
 
-    void incrementUserAccess(int workshopId) throws ResourceNotFoundException, WorkshopValidationException;
+//    getUserInWorkshopByInstructor
+
 }

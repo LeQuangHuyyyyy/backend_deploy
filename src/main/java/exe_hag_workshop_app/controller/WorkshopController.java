@@ -2,6 +2,7 @@ package exe_hag_workshop_app.controller;
 
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.exception.WorkshopValidationException;
+import exe_hag_workshop_app.payload.UserInWorkshopByInstructor;
 import exe_hag_workshop_app.payload.WorkshopRequest;
 import exe_hag_workshop_app.payload.WorkshopResponse;
 import exe_hag_workshop_app.service.WorkshopService;
@@ -125,4 +126,11 @@ public class WorkshopController {
 //        }
 //    }
 
+
+    @GetMapping("/{instructorId}")
+    public ResponseEntity<?> getUserInWorkshopByInstructor(@PathVariable("instructorId") int instructorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserInWorkshopByInstructor> workshops = workshopService.getUserInWorkshopByInstructor(instructorId, pageable);
+        return new ResponseEntity<>(workshops, HttpStatus.OK);
+}
 }
