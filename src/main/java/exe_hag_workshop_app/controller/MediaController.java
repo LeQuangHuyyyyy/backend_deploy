@@ -24,24 +24,21 @@ public class MediaController {
     }
 
     @PutMapping("/{mediaId}")
-    public ResponseEntity<MediaDTO> updateMedia(
-            @PathVariable Integer mediaId,
-            @RequestBody MediaDTO mediaDTO) {
+    public ResponseEntity<MediaDTO> updateMedia(@PathVariable Integer mediaId, @RequestBody MediaDTO mediaDTO) {
         MediaDTO updatedMedia = mediaService.updateMedia(mediaId, mediaDTO);
         return ResponseEntity.ok(updatedMedia);
     }
 
-    // Xóa media (soft delete)
     @DeleteMapping("/{mediaId}")
     public ResponseEntity<Void> deleteMedia(@PathVariable Integer mediaId) {
         mediaService.deleteMedia(mediaId);
         return ResponseEntity.noContent().build();
     }
 
-    // Lấy thông tin một media
     @GetMapping("/{mediaId}")
     public ResponseEntity<MediaDTO> getMediaById(@PathVariable Integer mediaId) {
         MediaDTO media = mediaService.getMediaById(mediaId);
         return ResponseEntity.ok(media);
     }
+    
 }
