@@ -127,10 +127,10 @@ public class WorkshopController {
 //    }
 
 
-    @GetMapping("/{instructorId}")
-    public ResponseEntity<?> getUserInWorkshopByInstructor(@PathVariable("instructorId") int instructorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserInWorkshopByInstructor> workshops = workshopService.getUserInWorkshopByInstructor(instructorId, pageable);
-        return new ResponseEntity<>(workshops, HttpStatus.OK);
-}
+//    @GetMapping("/{instructorId}")
+//    public ResponseEntity<?> getUserInWorkshopByInstructor(@PathVariable("instructorId") int instructorId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<UserInWorkshopByInstructor> workshops = workshopService.getUserInWorkshopByInstructor(instructorId, pageable);
+//        return new ResponseEntity<>(workshops, HttpStatus.OK);
+//}
 }

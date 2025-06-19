@@ -230,12 +230,12 @@ public class WorkshopServiceImp implements WorkshopService {
         return workshopRepository.calculateWorkshopRevenue(workshopId);
     }
 
-    @Override
-    public void incrementUserAccess(int workshopId) throws ResourceNotFoundException, WorkshopValidationException {
-        Workshops workshop = workshopRepository.findById(workshopId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found"));
-        workshop.setUserAccess(workshop.getUserAccess() + 1);
-        workshopRepository.save(workshop);
-    }
+//    @Override
+//    public void incrementUserAccess(int workshopId) throws ResourceNotFoundException, WorkshopValidationException {
+//        Workshops workshop = workshopRepository.findById(workshopId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found"));
+//        workshop.setUserAccess(workshop.getUserAccess() + 1);
+//        workshopRepository.save(workshop);
+//    }
 
 
 }
