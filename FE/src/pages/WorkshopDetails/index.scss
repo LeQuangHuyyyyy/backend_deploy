@@ -1,0 +1,497 @@
+.workshop-page {
+  background: linear-gradient(135deg, #fff5ee 0%, #fff 100%);
+  
+  padding-bottom: 40px;
+  font-family: "Inter", Arial, sans-serif;
+}
+
+.ticket-banner {
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(90deg, #232323 60%, #1a1a1a 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  max-width: 1100px;
+  margin: 40px auto 32px auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  &__info {
+    flex: 1 1 55%;
+    color: #fff;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        45deg,
+        rgba(46, 204, 64, 0.1) 0%,
+        transparent 100%
+      );
+      z-index: 0;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+      span {
+        color: #2ecc40;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: #2ecc40;
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+        &:hover::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+
+    .ticket-banner__meta {
+      font-size: 1.08rem;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+      div {
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s ease;
+        &:hover {
+          transform: translateX(5px);
+        }
+        i {
+          color: #2ecc40;
+          font-size: 1.1em;
+        }
+      }
+    }
+
+    .ticket-banner__more-date {
+      background: rgba(68, 68, 68, 0.8);
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 0.95rem;
+      display: inline-block;
+      margin-bottom: 10px;
+      width: fit-content;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(4px);
+
+      &:hover {
+        background: rgba(46, 204, 64, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    .ticket-banner__price {
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+      span {
+        color: #2ecc40;
+        font-weight: bold;
+        font-size: 1.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .btn-main {
+      background: linear-gradient(45deg, #2ecc40, #27ae38);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(46, 204, 64, 0.3);
+        &::before {
+          left: 100%;
+        }
+      }
+    }
+  }
+
+  &__img {
+    flex: 1 1 30%;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    left: 12px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        45deg,
+        rgba(46, 204, 64, 0.1) 0%,
+        transparent 100%
+      );
+      z-index: 1;
+    }
+
+    img {
+      width: 95%;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 0;
+
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+}
+
+.workshop-card {
+  background: rgba(255, 245, 238, 0.9);
+  border-radius: 16px;
+  max-width: 1100px;
+  margin: 0 auto 24px auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 28px 36px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  &.intro {
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: #2c3e50;
+      position: relative;
+      padding-bottom: 8px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #2ecc40;
+        border-radius: 2px;
+      }
+    }
+
+    .intro-content {
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        b {
+          font-weight: 700;
+          color: #2ecc40;
+        }
+      }
+    }
+  }
+
+  &.ticket-info {
+    background: linear-gradient(135deg, #18191b 0%, #232323 100%);
+    color: #fff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(46, 204, 64, 0.1);
+
+    .ticket-info__header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 18px 24px 12px 24px;
+      border-bottom: 1px solid rgba(46, 204, 64, 0.2);
+      border-radius: 16px 16px 0 0;
+      background: rgba(46, 204, 64, 0.05);
+    }
+
+    .ticket-info__body {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 18px 24px;
+      font-size: 1.08rem;
+      min-height: 60px;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: rgba(46, 204, 64, 0.05);
+      }
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        i {
+          color: #2ecc40;
+          font-size: 1.1em;
+        }
+        b {
+          font-weight: 700;
+        }
+      }
+
+      .btn-main {
+        background: linear-gradient(45deg, #10c45c, #0e9e4a);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 28px;
+        font-size: 1.08rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        // position: relative;
+        // overflow: hidden;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+          //transition: 0.5s;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(16, 196, 92, 0.3);
+          &::before {
+            left: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  &.organizer {
+    display: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.9);
+
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      color: #2c3e50;
+      position: relative;
+      padding-bottom: 8px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #2ecc40;
+        border-radius: 2px;
+      }
+    }
+
+    .organizer__info {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 18px 0 8px 0;
+      min-height: 120px;
+    }
+
+    .organizer__center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .organizer__logo {
+      width: 96px;
+      height: 96px;
+      min-width: 96px;
+      min-height: 96px;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #f6f8fb;
+      border: 1px solid rgba(46, 204, 64, 0.1);
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      display: block;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .organizer__name {
+      font-size: 1.18rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      color: #2c3e50;
+
+      b {
+        color: #2ecc40;
+      }
+    }
+
+    .organizer__desc {
+      color: #666;
+      font-size: 1.02rem;
+      margin-top: 2px;
+      text-align: center;
+    }
+  }
+}
+
+.workshop-footer {
+  max-width: 900px;
+  margin: 0 auto;
+  .workshop-footer__title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    text-align: center;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 8px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: #2ecc40;
+      border-radius: 2px;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .ticket-banner {
+    flex-direction: column;
+    &__info,
+    &__img {
+      padding: 24px 16px;
+      max-width: 100%;
+    }
+    &__img {
+      img {
+        width: 100%;
+      }
+    }
+  }
+  .workshop-card {
+    padding: 18px 10px;
+    margin: 0 10px 24px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .workshop-card.organizer .organizer__info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .workshop-card.organizer .organizer__logo {
+    margin-bottom: 8px;
+  }
+  .ticket-banner__info {
+    padding: 24px 16px;
+  }
+  .workshop-card.ticket-info .ticket-info__body {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

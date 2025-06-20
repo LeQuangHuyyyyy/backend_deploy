@@ -1,0 +1,125 @@
+.bankacc-wrapper {
+  min-height: 62.3vh;
+  background: #fcf6ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bankacc-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  padding: 32px 24px;
+  gap: 24px;
+  min-width: 700px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.bankacc-left {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 16px;
+}
+
+.bankacc-title {
+  color: #a67c2d;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.bankacc-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 32px;
+  align-items: center;
+}
+
+.bankacc-input {
+  width: 340px;
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #f2f2f2;
+  font-size: 16px;
+  color: #7a5c1c;
+  outline: none;
+  margin-bottom: 0;
+  transition: box-shadow 0.2s;
+}
+.bankacc-input:focus {
+  box-shadow: 0 0 0 2px #ffe0b2;
+}
+
+.bankacc-btn-row {
+  display: flex;
+  gap: 60px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.bankacc-btn {
+  background: #a67c2d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 38px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.bankacc-btn:hover {
+  background: #7a5c1c;
+}
+
+.bankacc-divider {
+  width: 1px;
+  background: #eee;
+  margin: 0 18px;
+}
+
+.bankacc-right {
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.bankacc-img {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.bankacc-img-caption {
+  background: #ffb84d;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 0 0 14px 14px;
+  padding: 10px 0 4px 0;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.bankacc-img-caption span {
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 2px;
+}

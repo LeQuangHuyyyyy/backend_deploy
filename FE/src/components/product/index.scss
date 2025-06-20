@@ -1,0 +1,122 @@
+.card {
+  position: relative;
+//   width: calc(25% - 20px);
+
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  height: 380px;
+  &:hover {
+      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .image {
+    cursor: pointer;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 10px;
+
+      img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+
+          &:hover {
+              transform: scale(1.1);
+          }
+      }
+  }
+
+  .content {
+      text-align: center;
+      padding: 15px;
+      
+      .name {
+          font-size: 18px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 5px;
+      }
+
+      .price {
+          font-size: 16px;
+          font-weight: bold;
+          color: #6d855b;
+          margin-bottom: 10px;
+      }
+
+      .description {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.5;
+          max-height: 60px;
+          overflow: hidden;
+      }
+  }
+
+  .btn {
+     position: absolute;
+     bottom: 5px;
+      background: linear-gradient(45deg, #79835c, #6d855b);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+  }
+
+  }
+  .cart-list-name {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    
+    h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0a488b;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+        display: inline-block;
+        background: #0a488b;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+    }
+
+    /* Thêm đường gạch chân cách điệu */
+    h1::after {
+        content: "";
+        display: block;
+        width: 50%;
+        height: 4px;
+        background: #00c6ff;
+        margin: 8px auto 0;
+        border-radius: 2px;
+    }
+}
+
+/* Responsive cho màn hình nhỏ hơn */
+@media (max-width: 1024px) {
+    .cart-list-name h1 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-list-name h1 {
+        font-size: 24px;
+    }
+}

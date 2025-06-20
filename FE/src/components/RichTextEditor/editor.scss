@@ -1,0 +1,35 @@
+.ProseMirror {
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  min-height: 200px;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tiptap-editor-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  .toolbar {
+    border-bottom: 1px solid #eee;
+    padding: 8px;
+    button {
+      background: none;
+      border: none;
+      margin-right: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      &.is-active {
+        color: #b08a5a;
+        font-weight: bold;
+      }
+    }
+  }
+  .ProseMirror {
+    min-height: 180px;
+    padding: 12px;
+    font-size: 14px;
+    outline: none;
+  }
+}

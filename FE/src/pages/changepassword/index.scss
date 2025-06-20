@@ -1,0 +1,11 @@
+.btn-change-password {
+  background: #b47b3a !important;
+  color: #fff !important;
+  border: 1px solid #b47b3a !important;
+  &:hover
+  {
+    background: #fff !important;
+    color: #b47b3a !important;
+    border: 1px solid #b47b3a !important;
+  }
+}

@@ -1,0 +1,40 @@
+.profile-page {
+  max-width: 100vw;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 40px;
+  .custom-upload {
+    width: 200px;
+    padding: 10px;
+  }
+  .image-upload {
+    .custom-upload .ant-upload {
+      width: 180px !important;
+      height: 180px !important;
+    }
+    .custom-upload .ant-upload img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .form-user {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .Name {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+  }
+  .button-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}

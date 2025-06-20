@@ -1,0 +1,37 @@
+.marketing-dashboard {
+  padding: 16px;
+  background: #18122b;
+  min-height: 100vh;
+
+  .dashboard-summary {
+    margin-bottom: 16px;
+    .ant-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .ant-statistic-title {
+      font-size: 1rem;
+    }
+  }
+
+  .dashboard-charts {
+    margin-bottom: 16px;
+    .ant-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .dashboard-section-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+  }
+
+  .dashboard-table {
+    border-radius: 12px;
+    .ant-table {
+      background: #fff;
+      border-radius: 12px;
+    }
+  }
+}

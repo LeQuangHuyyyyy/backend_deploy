@@ -1,0 +1,128 @@
+.workshop-page-container {
+  padding: 40px;
+  background-color: #fff5ee;
+  .workshop-filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    position: sticky;
+    top: 10px;
+    height: fit-content;
+
+    .workshop-filter-button {
+      display: flex;
+      height: 45px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 30px;
+      background: #8a9c7c;
+      border: solid white !important;
+      color: white;
+      &:hover {
+        background: #8a9c7c;
+        color: white !important;
+        border: solid white !important;
+      }
+    }
+
+    .shopping-price-filter {
+      width: 80%;
+      border-radius: 10px;
+      height: 48px;
+      font-weight: 500;
+      font-size: 16px;
+      background: #ffffff;
+    }
+  }
+  .shopping-price-filter.active {
+    background-color: #8a9c7c;
+    color: white;
+  }
+  .shopping-price-filter:hover {
+    background-color: #8a9c7c !important;
+    color: white !important;
+  }
+  .workshop-list-section {
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .workshop-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.06);
+      padding: 16px 10px 18px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      height: 100%;
+      position: relative;
+      cursor: pointer;
+      border: 1.5px solid #f0f0f0;
+      &:hover {
+        box-shadow: 0 8px 24px rgba(24, 144, 255, 0.12);
+        transform: translateY(-4px) scale(1.03);
+        border: 1.5px solid #8a9c7c;
+      }
+      .workshop-img {
+        width: 100%;
+        height: 20vh;
+        object-fit: cover;
+        border-radius: 12px;
+
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.06);
+        transition: transform 0.2s;
+      }
+      .workshop-desc {
+        font-size: 1.08rem;
+        color: #222;
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .workshop-price {
+        color: #52c41a;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .workshop-date {
+        color: #888;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+    }
+    .workshop-load-more-container {
+      margin-top: 24px;
+    }
+    .workshop-load-more-btn {
+      height: 45px;
+      border-radius: 20px;
+      border: solid white !important;
+      font-size: 16px;
+      background-color: #8a9c7c;
+      color: white;
+      &:hover {
+        background-color: #8a9c7c !important;
+        color: white !important;
+      }
+    }
+  }
+  .workshop-loading-container {
+    height: 50vh;
+    width: 100%;
+  }
+}
+
+.workshop-search-btn {
+  background-color: #8a9c7c !important;
+  border-color: #8a9c7c !important;
+  color: #fff !important;
+}

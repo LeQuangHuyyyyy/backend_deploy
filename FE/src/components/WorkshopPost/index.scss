@@ -1,0 +1,83 @@
+.workshop-post-wrapper {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.form-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222;
+  margin: 8px 0 32px;
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+}
+
+.workshop-form {
+  background: #fdf6ee;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 24px;
+  width: 100vw;
+
+  margin: 0 auto;
+
+  .submit-btn {
+    background: #b08a5a !important;
+    color: #fff !important;
+    border: none !important;
+    margin-top: 12px;
+    float: right;
+    width: 120px;
+    &:hover {
+      background: #a07a4a !important;
+    }
+  }
+}
+
+/* Responsive tablet & mobile */
+@media (max-width: 900px) {
+  .workshop-form {
+    max-width: 99vw;
+    padding: 16px 2vw;
+  }
+  .form-title {
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+  }
+  .ant-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .workshop-form {
+    padding: 8px 1vw;
+  }
+  .form-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  .submit-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 0;
+    float: none;
+  }
+}
+
+.ql-container {
+  min-height: 180px;
+  font-size: 14px;
+}
+.ql-toolbar {
+  border-radius: 6px 6px 0 0;
+}
+.ql-container.ql-snow {
+  border-radius: 0 0 6px 6px;
+}

@@ -1,0 +1,333 @@
+.newworkshop-wrapper {
+  background: #fdf6ec;
+  max-height: 100vh;
+  padding: 40px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.newworkshop-card {
+  background: #fdf6ee;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  padding: 32px 40px;
+  gap: 32px;
+  max-width: 73vw;
+  width: 100%;
+  margin-bottom: 36px;
+  border: 1px solid #ece6da;
+}
+
+.newworkshop-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e0e0e0;
+  flex-shrink: 0;
+}
+
+.newworkshop-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.newworkshop-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.newworkshop-desc {
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 24px;
+}
+
+.newworkshop-actions {
+  display: flex;
+  gap: 16px;
+  .btn {
+    min-width: 160px;
+    height: 44px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+  .btn-outline {
+    background: #fff;
+    color: #222;
+    border: 1.5px solid #222;
+    &:hover {
+      background: #ece6da;
+      color: #111;
+    }
+  }
+  .btn-black {
+    background: #111;
+    color: #fff;
+    &:hover {
+      background: #333;
+      color: #fff;
+    }
+  }
+}
+
+.newworkshop-stats {
+  background: #8a9c7c;
+  border-radius: 12px;
+  display: flex;
+  gap: 24px;
+  padding: 32px 24px;
+  max-width: 73vw;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 0;
+
+  .stat-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    flex: 1;
+    padding: 18px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    .stat-label {
+      color: #f5efe5;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .stat-value {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 900px) {
+  .newworkshop-card,
+  .newworkshop-stats {
+    max-width: 98vw;
+    padding: 24px 8px;
+  }
+  .newworkshop-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    .newworkshop-img {
+      margin-bottom: 8px;
+    }
+    .newworkshop-actions {
+      flex-direction: column;
+      width: 100%;
+      .btn {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  }
+  .newworkshop-stats {
+    flex-direction: column;
+    gap: 16px;
+    .stat-box {
+      width: 100%;
+      align-items: flex-start;
+    }
+  }
+}
+
+.workshoppost-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+// .workshoppost-modal-bg {
+//   position: fixed;
+//   inset: 0;
+//   background: rgba(0, 0, 0, 0.25);
+//   z-index: 1001;
+  
+// }
+// .workshoppost-modal-content {
+//   position: relative;
+//   z-index: 1002;
+//   background: #fdf6ee;
+//   border-radius: 16px;
+//   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+//   padding: 40px 40px 32px 40px;
+//   max-width: 50vw;
+//   max-height: 90vh; 
+//   width: 95vw;
+//   min-width: 0;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: stretch;
+// }
+
+// .workshop-form {
+//   background: transparent;
+//   box-shadow: none;
+//   border-radius: 0;
+//   padding: 0;
+//   max-width: 100%;
+//   width: 100%;
+
+//   .form-2col {
+//     display: flex;
+//     gap: 32px;
+//     align-items: flex-start;
+//   }
+//   .form-col-left {
+//     flex: 0 0 200px;
+//     min-width: 180px;
+//     max-width: 220px;
+//     .ant-form-item {
+//       margin-bottom: 28px;
+//     }
+//   }
+//   .form-col-right {
+//     flex: 1 1 0;
+//     min-width: 0;
+//   }
+
+//   .form-row {
+//     display: flex;
+//     gap: 16px;
+//     .form-col {
+//       flex: 1;
+//     }
+//   }
+
+//   .ant-form-item-label > label {
+//     color: #222;
+//     font-weight: 500;
+//     font-size: 1rem;
+//   }
+
+//   .ant-input,
+//   .ant-select-selector,
+//   .ant-picker-input > input {
+//     background: #fff;
+//     border-radius: 6px !important;
+//     border: none;
+//     font-size: 1rem;
+//     color: #222;
+//     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+//     padding: 8px 12px;
+//     transition: border 0.2s;
+//   }
+
+//   .ant-input:focus,
+//   .ant-select-focused .ant-select-selector,
+//   .ant-picker-focused .ant-picker-input > input {
+//     border: 1.5px solid #b08a5a !important;
+//     background: #fffbe6;
+//   }
+
+//   .ant-input[disabled],
+//   .ant-select-disabled .ant-select-selector {
+//     background: #f5efe5;
+//     color: #aaa;
+//   }
+
+//   .ant-input-textarea {
+//     min-height: 100px;
+//     border-radius: 6px;
+//     font-size: 1rem;
+//     background: #fff;
+//   }
+
+//   .ant-upload {
+//     width: 100%;
+//   }
+
+//   .ant-btn {
+//     border-radius: 6px;
+//     font-size: 1rem;
+//     font-weight: 500;
+//     min-width: 120px;
+//     height: 40px;
+//     background: #fff;
+//     color: #222;
+//     border: 1.5px solid #e0e0e0;
+//     transition: all 0.2s;
+//     &:hover {
+//       background: #ece6da;
+//       color: #111;
+//       border-color: #b08a5a;
+//     }
+//   }
+
+//   .submit-btn {
+//     background: #b08a5a !important;
+//     color: #fff !important;
+//     border: none !important;
+//     margin-top: 12px;
+//     float: right;
+//     min-width: 120px;
+//     width: 120px;
+//     display: block;
+//     &:hover {
+//       background: #a07a4a !important;
+//       color: #fff !important;
+//     }
+//   }
+// }
+
+// .close-modal-btn {
+//   position: absolute;
+//   top: 12px;
+//   right: 12px;
+//   background: #b08a5a;
+//   color: #fff;
+//   border: none;
+//   border-radius: 6px;
+//   padding: 6px 16px;
+//   font-weight: 500;
+//   cursor: pointer;
+//   transition: background 0.2s;
+//   &:hover {
+//     background: #a07a4a;
+//   }
+// }
+
+@media (max-width: 900px) {
+  .workshoppost-modal-content {
+    max-width: 99vw;
+    padding: 16px 4vw 12px 4vw;
+  }
+  .workshop-form .form-2col {
+    flex-direction: column;
+    gap: 0;
+    .form-col-left,
+    .form-col-right {
+      max-width: 100%;
+      width: 100%;
+    }
+    .form-col-left {
+      margin-bottom: 12px;
+    }
+  }
+  .workshop-form .submit-btn {
+    width: 100%;
+    float: none;
+  }
+}

@@ -1,0 +1,158 @@
+.workshop-main-content {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 0 0;
+  background: transparent;
+
+  .workshop-main-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 18px;
+  }
+
+  .workshop-main-image {
+    width: 100%;
+    border-radius: 16px;
+    object-fit: cover;
+    max-height: 240px;
+    margin-bottom: 12px;
+  }
+
+  .workshop-main-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #eae3db;
+    }
+    .author-name {
+      font-weight: 600;
+      color: #222;
+      font-size: 1rem;
+    }
+    .author-role {
+      font-size: 0.9rem;
+      color: #888;
+      font-weight: 400;
+    }
+    .author-rating {
+      margin-left: 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      .review-count {
+        color: #a67c52;
+        font-size: 0.95em;
+        margin-left: 6px;
+      }
+    }
+    .workshop-main-price {
+      margin-left: auto;
+      background: transparent;
+      color: #a67c52;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+  }
+
+  .workshop-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 24px 0 16px 0;
+    .tab-btn {
+      background: #f3e5d8;
+      color: #a67c52;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      &.active {
+        background: #d6b98c;
+        color: #fff;
+      }
+    }
+  }
+
+  .workshop-tab-content {
+    background: transparent;
+    padding: 0 0 12px 0;
+    h3 {
+      color: #a67c52;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #444;
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+    .workshop-reviews {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      .review-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 18px 18px 12px 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        .review-avatar {
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        .review-name {
+          color: #a67c52;
+          font-weight: 700;
+          font-size: 1.1rem;
+          margin-bottom: 4px;
+        }
+        .review-content {
+          color: #444;
+          font-size: 1rem;
+          margin-bottom: 6px;
+        }
+        .review-stars {
+          color: #f7b731;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .workshop-main-content {
+    max-width: 100%;
+    .workshop-main-image {
+      max-height: 180px;
+    }
+    .workshop-main-author .author-avatar {
+      width: 32px;
+      height: 32px;
+    }
+    .workshop-tab-content .workshop-reviews .review-item {
+      padding: 12px 8px 8px 8px;
+      .review-avatar {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.workshop-suggestion-wrapper {
+  width: 100%;
+  margin: 48px 0 0 0;
+  text-align: center;
+
+  .suggestion-title {
+    color: #a67c52;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .suggestion-list {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .suggestion-card {
+    background: #cbb08a;
+    border-radius: 12px;
+    width: 290px;
+    padding: 0 0 18px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s;
+    &:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 6px 24px rgba(166, 124, 82, 0.12);
+    }
+    .suggestion-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 10px;
+    }
+    .suggestion-desc {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 400;
+      margin: 0 16px 6px 16px;
+      text-align: left;
+    }
+    .suggestion-price {
+      color: #eae3db;
+      font-size: 1rem;
+      font-weight: 500;
+      margin: 0 16px 2px 16px;
+      text-align: left;
+    }
+    .suggestion-date {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 16px;
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .workshop-suggestion-wrapper {
+    .suggestion-list {
+      gap: 16px;
+    }
+    .suggestion-card {
+      width: 95vw;
+      max-width: 340px;
+    }
+  }
+}

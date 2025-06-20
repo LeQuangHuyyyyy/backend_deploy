@@ -1,0 +1,330 @@
+.marketing-page {
+  min-height: 66.32vh;
+  background-color: #fff5ee;
+
+  .marketing-container {
+    max-width: 1200px;
+    margin: 10px auto 0;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: #1a1a1a;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    h4 {
+      font-size: 1.1rem;
+      color: #666;
+    }
+  }
+
+  .stats-section {
+    margin-bottom: 2rem;
+
+    .ant-card {
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .ant-statistic-title {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .ant-statistic-content {
+        color: #1a1a1a;
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .campaigns-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    .create-campaign-btn {
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 8px;
+      height: 44px;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.08);
+      background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+      border: none;
+      transition: all 0.2s;
+      &:hover {
+        background: linear-gradient(90deg, #52c41a 0%, #1890ff 100%);
+        transform: translateY(-2px) scale(1.03);
+      }
+    }
+  }
+
+  .campaigns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    .empty-list {
+      grid-column: 1/-1;
+      text-align: center;
+      color: #aaa;
+      font-size: 1.2rem;
+      padding: 2rem 0;
+    }
+  }
+
+  .campaign-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: none;
+    background: #fff;
+    .ant-card-cover {
+      .card-preview {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        &.empty {
+          color: #999;
+          font-size: 14px;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+    &:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 8px 24px rgba(24, 144, 255, 0.12);
+    }
+    .ant-card-meta-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .ant-card-meta-description {
+      p {
+        margin-bottom: 0.5rem;
+        color: #666;
+      }
+    }
+    .ant-card-actions {
+      background: #fafafa;
+      border-top: 1px solid #f0f0f0;
+    }
+    .campaign-stats {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f0f0f0;
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+        span {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+    }
+  }
+
+  .create-campaign-modal {
+    .ant-modal-content {
+      border-radius: 16px;
+      padding: 2rem 2rem 1.5rem 2rem;
+    }
+    .ant-modal-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .campaign-form {
+      .ant-form-item {
+        margin-bottom: 1.5rem;
+      }
+      .ant-input,
+      .ant-select-selector,
+      .ant-input-textarea {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        &:hover,
+        &:focus {
+          border-color: #1890ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+        }
+      }
+      .ant-select-selector {
+        height: auto !important;
+      }
+      .ant-upload-list-picture-card {
+        .ant-upload-list-item {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      }
+      .ant-btn {
+        height: 48px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+        }
+      }
+    }
+  }
+
+  .campaign-details-modal {
+    .campaign-details {
+      .campaign-tags {
+        margin: 1rem 0;
+      }
+
+      .campaign-content {
+        margin: 20px 0;
+
+        img {
+          width: 100%;
+          max-height: 400px;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+
+        video {
+          width: 100%;
+          max-height: 400px;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+
+        .carousel-preview {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-top: 16px;
+
+          img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+          }
+        }
+      }
+
+      .campaign-analytics {
+        background: #fafafa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+
+        .ant-statistic {
+          .ant-statistic-title {
+            color: #666;
+            font-size: 0.9rem;
+          }
+
+          .ant-statistic-content {
+            color: #1a1a1a;
+            font-size: 1.25rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Custom styles for campaign type selector
+  .ant-select-item {
+    padding: 12px 16px;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: #f0f7ff;
+    }
+  }
+
+  // Tabs styling
+  .campaign-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 2rem;
+
+      .ant-tabs-tab {
+        padding: 12px 24px;
+        font-size: 1rem;
+
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: #1890ff;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 900px) {
+    .marketing-container {
+      padding: 1rem;
+    }
+    .campaigns-grid {
+      grid-template-columns: 1fr;
+    }
+    .stats-section {
+      .ant-col {
+        margin-bottom: 1rem;
+      }
+    }
+    .create-campaign-modal {
+      .ant-modal-content {
+        padding: 1rem;
+      }
+    }
+  }
+}

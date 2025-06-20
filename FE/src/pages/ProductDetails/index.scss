@@ -1,0 +1,116 @@
+.productdetail {
+  max-width: 100vw;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 40px;
+  // margin: 0 20% 0 20%;
+  background-color: #fdf6ee;
+
+  .ant-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(180, 123, 92, 0.08);
+    padding: 24px;
+  }
+
+  .productdetail-info {
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    margin-bottom: 12px;
+
+    &__title {
+      color: #b47b5c;
+      font-size: 20px;
+      width: 15vw;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    p {
+      color: #222;
+      font-size: 20px;
+    }
+    .productdetail-info__name {
+      font-size: 16px;
+      color: #444;
+    }
+  }
+}
+.ant-breadcrumb-link > a {
+  color: #2c54e6 !important;
+}
+
+.mainCarousel,
+.thumbCarousel {
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(180, 123, 92, 0.08);
+  margin-bottom: 16px;
+}
+
+.thumbCarousel {
+  .swiper-slide {
+    border: 2px solid #f5e3d3;
+    border-radius: 8px;
+    transition: border 0.2s;
+    &-thumb-active {
+      border: 2px solid #b47b5c;
+    }
+  }
+}
+
+.suggested-products-section {
+  margin-top: 48px;
+  padding: 32px 0 16px 0;
+  background: #fff8f0;
+  border-radius: 16px;
+  //box-shadow: 0 4px 16px rgba(180, 123, 92, 0.1);
+
+  h3 {
+    color: #b47b5c;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .suggested-products-list {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-bottom: 12px;
+  }
+}
+
+.suggested-products-list .ant-card {
+  min-width: 220px;
+  max-width: 240px;
+  flex: 1 1 220px;
+  border-radius: 12px;
+  // box-shadow: 0 2px 8px rgba(180, 123, 92, 0.1);
+  transition: box-shadow 0.2s;
+  margin-bottom: 8px;
+  background: #fff;
+}
+
+// .suggested-products-list .ant-card:hover {
+//   box-shadow: 0 6px 24px rgba(180, 123, 92, 0.18);
+// }
+
+.suggested-products-list img {
+  object-fit: cover;
+  width: 100%;
+  height: 180px;
+  border-radius: 10px 10px 0 0;
+  background: #f5e3d3;
+}
+
+.ant-card-cover img {
+  object-fit: cover;
+  width: 100%;
+  height: 180px;
+  border-radius: 10px 10px 0 0;
+  background: #f5e3d3;
+}

@@ -1,0 +1,221 @@
+.submenu-instructor-wrapper {
+  background: #fdf6ec;
+  // max-height: 100vh;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1vw 0 0 0;
+  align-items: center;
+  // padding-bottom: 100px;
+}
+
+.submenu-tabs {
+  display: flex;
+  gap: 32px;
+  padding: 0 0 0 3vw;
+  background: transparent;
+}
+
+.submenu-tab {
+  font-size: 1.15rem;
+  color: #444;
+  font-weight: 500;
+  padding: 12px 0;
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  &:hover {
+    color: #222;
+  }
+  &.active {
+    color: #222;
+    border-bottom: 2.5px solid #6e6b65;
+    font-weight: 700;
+  }
+}
+
+.submenu-content {
+  background: transparent;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  // padding-bottom: 100px;
+ 
+  
+}
+.overview-dashboard-wrapper {
+  flex: 1;
+}
+.workshop-list {
+  background: transparent;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 24px;
+  justify-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.workshop-card {
+  background: #c6b08a;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  display: flex;
+  padding: 24px 20px;
+  gap: 18px;
+  min-width: 0;
+  max-width: 360px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: flex-start;
+}
+
+.workshop-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e0e0e0;
+  flex-shrink: 0;
+}
+
+.workshop-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.workshop-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #b07a4a;
+  margin-bottom: 2px;
+}
+
+.workshop-author {
+  color: #b07a4a;
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+}
+
+.workshop-desc {
+  color: #b07a4a;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.workshop-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  .workshop-tag {
+    background: #e0e0e0;
+    color: #6e6b65;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    padding: 2px 10px;
+    font-weight: 500;
+  }
+}
+
+.workshop-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  .owner-dot {
+    width: 14px;
+    height: 14px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .owner-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+// Responsive
+@media (max-width: 900px) {
+  .submenu-content {
+    padding: 0 8px;
+  }
+  .submenu-tabs {
+    padding: 0 0 24px 8px;
+    gap: 18px;
+  }
+  .workshop-list {
+    gap: 18px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .workshop-card {
+    min-width: 0;
+    max-width: 98vw;
+    width: 100%;
+    padding: 18px 8px;
+  }
+}
+.participants-table-wrapper {
+  margin-top: 24px;
+  background: #fdf6ec;
+  border-radius: 10px;
+  padding: 16px 0 24px 0;
+}
+
+.participants-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fdf6ec;
+  font-size: 1rem;
+}
+
+.participants-table thead tr {
+  background: #fdf0dc;
+}
+
+.par cipants-table th,
+.participants-table td {
+  padding: 12px 18px;
+  text-align: left;
+}
+
+.participants-table tbody tr {
+  background: #e5e5e5;
+  border-radius: 8px;
+}
+
+.participants-table tbody tr + tr {
+  margin-top: 8px;
+}
+
+.participants-table td {
+  color: #222;
+}
+
+.participants-table td:last-child {
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .paripants-table th,
+  .participants-table td {
+    padding: 8px 6px;
+    font-size: 0.95rem;
+  }
+}
+
+.overview-dashboard {
+  margin-bottom: 40px;
+  @media (max-width: 900px) {
+    margin-bottom: 24px;
+  }
+}

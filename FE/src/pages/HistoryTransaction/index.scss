@@ -1,0 +1,171 @@
+.history-transaction-page {
+  background: #fdf6ec;
+  min-height: 100vh;
+  padding: 0 0 40px 0;
+  font-family: inherit;
+  position: relative;
+}
+.history-header-back {
+ 
+  font-size: 2.2rem; 
+  
+  cursor: pointer;
+  flex-grow: 1.5;
+}
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 48px;
+  padding: 32px 0 0 0;
+  max-width: 900px;
+  margin: 0 auto;
+
+  .back-icon {
+    font-size: 1.3rem;
+    color: #222;
+    cursor: pointer;
+    margin-right: 12px;
+  }
+  .date-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex-grow: 2.4;
+    .date-label {
+      color: #888;
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+    .date-value {
+      color: #222;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      .calendar-icon {
+        font-size: 1.1rem;
+        color: #a67c52;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+.search-btn {
+  display: block;
+  margin: 28px auto 0 auto;
+  background: #a67c52;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 12px 48px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #8a6a43;
+  }
+}
+
+.history-content {
+  max-width: 900px;
+  margin: 32px auto 0 auto;
+  background: transparent;
+}
+
+.history-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 18px;
+  .tab-btn {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #222;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0 0 6px 0;
+    cursor: pointer;
+    transition: border 0.2s, color 0.2s;
+    &:hover,
+    &.active {
+      color: #a67c52;
+      border-bottom: 2.5px solid #a67c52;
+    }
+  }
+}
+
+.history-list {
+  margin-top: 12px;
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    padding: 18px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+    &:last-child {
+      border-bottom: none;
+    }
+    .history-item-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      .item-icon {
+        font-size: 2rem;
+        color: #222;
+        margin-right: 6px;
+      }
+      .item-title {
+        font-weight: 700;
+        color: #222;
+      }
+      .item-desc {
+        color: #888;
+        font-size: 0.98rem;
+      }
+    }
+    .history-item-right {
+      text-align: right;
+      .item-date {
+        color: #888;
+        font-size: 0.98rem;
+        margin-bottom: 2px;
+      }
+      .item-amount {
+        font-weight: 700;
+        font-size: 1.1rem;
+        &.amount-in {
+          color: #1ec700;
+        }
+        &.amount-out {
+          color: #e74c3c;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .history-header,
+  .history-content {
+    max-width: 99vw;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .history-header {
+    gap: 18px;
+    .date-group .date-value {
+      font-size: 1.1rem;
+    }
+  }
+  .search-btn {
+    font-size: 1rem;
+    padding: 10px 24px;
+  }
+}

@@ -1,0 +1,95 @@
+.banner-carousel {
+  padding: 20px 0;
+  background: #f9f6f2;
+  position: relative;
+  height: 50vh;
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: gray !important; // màu xám
+    width: 50px;
+    height: 50px;
+    font-size: 1px;
+    opacity: 0; // ẩn ban đầu
+    transition: opacity 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.8); // nền nhạt cho dễ nhìn
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+  }
+
+  // Khi hover vào slider thì hiện ra nút
+  &:hover .swiper-button-next,
+  &:hover .swiper-button-prev {
+    opacity: 1;
+  }
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 14px; // chỉnh icon nhỏ lại
+    line-height: 1;
+  }
+  // Điều chỉnh vị trí cho đẹp hơn nếu cần
+  .swiper-button-next {
+    right: 4px;
+  }
+  .swiper-button-prev {
+    left: 4px;
+  }
+}
+
+.banner-carousel-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #b47b3a;
+  padding-left: 1.3vw;
+}
+
+.banner-card {
+  width: 70%;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  text-align: center;
+  transition: box-shadow 0.2s;
+  padding: 20px;
+  position: relative;
+}
+
+.banner-card.highlight {
+  box-shadow: 0 4px 16px rgba(180, 123, 58, 0.15);
+}
+
+.banner-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.banner-title-main {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+  z-index: 2;
+}
+
+.banner-rank {
+  position: absolute;
+  left: -2vw;
+  top: 30vh;
+  font-size: 6rem;
+  font-weight: 800;
+  color: #79835c;
+  opacity: 0.18;
+  z-index: 3;
+  pointer-events: none;
+  font-family: "Montserrat", Arial, sans-serif;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,62 @@
+.dashboard-instructor-wrapper{
+    background: #fdf6ec !important; 
+    padding-bottom: 10vh;
+}
+.workshop-cta-wrapper {
+    background: #8a9c7c;
+    border-radius: 10px;
+    padding: 36px 24px 32px 24px;
+    max-width: 900px;
+    margin: 32px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .workshop-cta-title {
+    color: #f5efe5;
+    font-size: 1.35rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  
+  .workshop-cta-desc {
+    color: #e5e5d8;
+    font-size: 1rem;
+    margin-bottom: 22px;
+    max-width: 600px;
+  }
+  
+  .workshop-cta-btn {
+    background: #b08a5a;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover {
+      background: #a07a4a;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .workshop-cta-wrapper {
+      padding: 20px 6px 18px 6px;
+      max-width: 99vw;
+    }
+    .workshop-cta-title {
+      font-size: 1.05rem;
+    }
+    .workshop-cta-desc {
+      font-size: 0.95rem;
+      max-width: 98vw;
+    }
+    .workshop-cta-btn {
+      width: 100%;
+      padding: 10px 0;
+    }
+  }
