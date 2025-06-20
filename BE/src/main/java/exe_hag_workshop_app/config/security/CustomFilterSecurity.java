@@ -93,7 +93,7 @@ public class CustomFilterSecurity {
         CorsConfiguration configuration = new CorsConfiguration();
 
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
         }
 
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
@@ -109,7 +109,7 @@ public class CustomFilterSecurity {
         ));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // Cache CORS config for 1 hour
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
