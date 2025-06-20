@@ -3,7 +3,7 @@ name: Deploy Frontend to GCP Ubuntu
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - "FE/**"
       - ".github/workflows/deploy-frontend.yml"
