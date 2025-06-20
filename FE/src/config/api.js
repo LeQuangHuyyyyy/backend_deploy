@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-   baseURL: "http://34.96.206.251:8080/api", //
+   baseURL: "https://hagworkshop.site/api", //
   // https://hagworkshop.site/
 
   timeout: 5000,
