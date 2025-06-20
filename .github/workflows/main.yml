@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'BE/**'    
+      - '.github/workflows/main.yml'
 
 jobs:
   build-and-deploy:
@@ -20,6 +23,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Maven
+      working-directory: ./BE
       run: mvn clean package -DskipTests
 
     - name: Copy JAR file to VPS
