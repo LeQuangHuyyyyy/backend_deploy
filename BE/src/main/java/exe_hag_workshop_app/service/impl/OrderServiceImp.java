@@ -141,13 +141,7 @@ public class OrderServiceImp implements OrderService {
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
-            PaymentData paymentData = PaymentData.builder()
-                    .orderCode(orderCode)
-                    .description("thanh toan don hang")
-                    .amount((int) price)
-                    .returnUrl(returnUrl)
-                    .cancelUrl(cancelUrl)
-                    .build();
+            PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description("thanh toan don hang").amount((int) price).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
 
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
 
@@ -220,8 +214,8 @@ public class OrderServiceImp implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            final String returnUrl = "http://34.96.206.251:8080/api/orders/payment/success?orderId=" + order.getOrderId();
-            final String cancelUrl = "http://34.96.206.251:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final int price = (int) cart.getTotalAmount();
 
             String currentTimeString = String.valueOf(new Date().getTime());
