@@ -96,18 +96,9 @@ public class CustomFilterSecurity {
         if (allowedOrigins == null || allowedOrigins.length == 0) {
             allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
         }
-
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-//        configuration.setAllowedHeaders(Arrays.asList(
-//                "Authorization",
-//                "Content-Type",
-//                "Accept",
-//                "X-Requested-With",
-//                "Access-Control-Request-Method",
-//                "Access-Control-Request-Headers"
-//        ));
-//        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
@@ -115,6 +106,7 @@ public class CustomFilterSecurity {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
