@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -80,50 +81,69 @@ public class CustomFilterSecurity {
 //
 //        return http.build();
 //    }
+//
+//
+//
+//
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        if (allowedOrigins == null || allowedOrigins.length == 0) {
+//            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
+//        }
+//        configuration.setAllowedHeaders(Arrays.asList(
+//                "Authorization",
+//                "Cache-Control",
+//                "Content-Type",
+//                "X-Requested-With",
+//                "Origin",
+//                "Accept",
+//                "Access-Control-Request-Method",
+//                "Access-Control-Request-Headers"
+//        ));
+//        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Sửa tại đây
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/*"))
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/api/auth/oauth2/success", true)
-                )
-                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
-
+        http.cors(Customizer.withDefaults()).sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).csrf(csrf -> csrf.disable()).authorizeHttpRequests(request -> {
+            request.requestMatchers(PUBLIC_URLS).permitAll()
+                    .requestMatchers("/customer/update/**").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/customer/change-password").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/customer/profile/**").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/customer/delete").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/dashboard/**").hasAuthority("MANAGER")
+                    .requestMatchers("/information/**").hasAnyAuthority("MANAGER", "CUSTOMER")
+                    .requestMatchers("/orders/customer/**").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/orders/**").hasAnyAuthority("CUSTOMER", "ADMIN", "SHIPPER", "MANAGER")
+                    .requestMatchers("/orders/cancel/**").hasAnyAuthority("CUSTOMER", "ADMIN")
+                    .requestMatchers("/orders/delivered/**").hasAnyAuthority( "ADMIN", "SHIPPER")
+                    .requestMatchers("/orders/inprocess/**").hasAnyAuthority("MANAGER", "SHIPPER")
+                    .requestMatchers("/orders/metric/AI/**").hasAnyAuthority("ADMIN")
+                    .requestMatchers("/product-type/admin/create").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers("/users/admin/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers("/users/**").authenticated()
+                    .anyRequest().authenticated();
+        });
+        http.addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
-        }
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Cache-Control",
-                "Content-Type",
-                "X-Requested-With",
-                "Origin",
-                "Accept",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"
-        ));
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://hagworkshop.site","https://tam-tac.vercel.app","https://www.tam-tac.com", "https://tam-tac.com"));
+        configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
