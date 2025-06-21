@@ -45,6 +45,7 @@ public class CustomFilterSecurity {
 
     public static final String[] PUBLIC_URLS = {
             "/api/auth/login",
+            "/api/auth/**",
             "/api/auth/register",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",
