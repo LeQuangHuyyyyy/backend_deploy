@@ -134,8 +134,8 @@ public class OrderServiceImp implements OrderService {
 
 
         try {
-            final String returnUrl = "http://localhost:8080/api/orders/payment/success?orderId=" + order.getOrderId();
-            final String cancelUrl = "http://localhost:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final double price = w.getPrice();
 
             String currentTimeString = String.valueOf(new Date().getTime());
