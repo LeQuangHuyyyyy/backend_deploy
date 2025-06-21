@@ -59,6 +59,7 @@ public class CustomFilterSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("Allowed Origins: " + Arrays.toString(allowedOrigins));
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Sửa tại đây
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
