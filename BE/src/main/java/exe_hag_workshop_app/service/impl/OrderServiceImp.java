@@ -139,7 +139,6 @@ public class OrderServiceImp implements OrderService {
             final double price = w.getPrice();
 
 
-
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
