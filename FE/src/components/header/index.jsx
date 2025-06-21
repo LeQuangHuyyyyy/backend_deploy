@@ -53,7 +53,7 @@ const Header = () => {
   };
 
   const handleNavigateBlogPage = () => {
-    navigate("/blog");
+    navigate("/my-social");
   };
 
   const handleNavigateContactUsPage = () => {

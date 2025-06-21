@@ -3,7 +3,6 @@ import {
   Table,
   Button,
   InputNumber,
-  message,
   Card,
   Row,
   Col,
@@ -24,22 +23,21 @@ import "./index.scss";
 import { toast } from "react-toastify";
 import { showSuccessToast } from "../../config/configToast";
 import { formatMoneyToVND } from "../../currency/currency";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   deleteProductInRedux,
   resetCart,
 } from "../../redux/features/cartSlice";
+import { jwtDecode } from "jwt-decode";
 
 const { Title, Text } = Typography;
-const { confirm } = Modal;
+
 const { Option } = Select;
 
 const Cart = () => {
   const [dataCart, setDataCart] = useState({ cartItems: [] });
   const [listDiscount, setListDiscount] = useState([]);
-  const [count, setCount] = useState(1);
   const [seletedDiscount, setSeletectedDiscount] = useState(null);
   const [selectedDiscountPercentage, setSelectedDiscountPercentage] =
     useState(0);
@@ -70,54 +68,44 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    // fetchDiscountList();
+    fetchDiscountList();
     fetchingDataCart();
-  }, [count]);
+  }, []);
 
   const totalAmount = (dataCart.cartItems ?? []).reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
   const discountedTotal = totalAmount * (1 - selectedDiscountPercentage / 100);
-
+  const decodedToken = jwtDecode(localStorage.getItem("token"));
+  const cartId = decodedToken.cartId;
   const handleOrder = async () => {
     try {
-      const response = await api.post("Order", {
+      const response = await api.post("/orders", {
         discountId: seletedDiscount || 1,
+        cartId: cartId,
+        shippingAddress: "string",
       });
-      showSuccessToast(response.data.message);
-      dispatch(resetCart());
-      setDataCart({ cartItems: [] });
-    } catch {
-      toast.error("Lỗi khi thanh toán");
+
+      const checkoutUrl = response.data?.data?.data?.checkoutUrl;
+
+      if (checkoutUrl) {
+        // Redirect to payment gateway
+        window.location.href = checkoutUrl;
+      } else {
+        // If no checkoutUrl, assume success and clear cart
+        showSuccessToast(
+          response.data?.description || "Tạo đơn hàng thành công!"
+        );
+        dispatch(resetCart());
+        setDataCart({ cartItems: [] });
+      }
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      toast.error(error.response?.data?.message || "Lỗi khi tạo đơn hàng");
     }
   };
 
-  const confirmOrder = () => {
-    confirm({
-      title: (
-        <Title level={2} className="modal-title">
-          Xác nhận đặt hàng
-        </Title>
-      ),
-      icon: (
-        <ExclamationCircleOutlined
-          style={{ fontSize: "28px", color: "#faad14" }}
-        />
-      ),
-      content: (
-        <Text className="modal-content">
-          Bạn có chắc chắn muốn đặt hàng với tổng số tiền{" "}
-          <strong>{formatMoneyToVND(discountedTotal)} VND</strong> không?
-        </Text>
-      ),
-      okText: "Xác nhận",
-      cancelText: "Hủy",
-      centered: true,
-      width: 500,
-      onOk: handleOrder,
-    });
-  };
   const navigateToProduct = (id) => {
     navigate(`/product/${id}`);
   };
@@ -353,7 +341,7 @@ const Cart = () => {
             </Select>
 
             <Button
-              onClick={confirmOrder}
+              onClick={handleOrder}
               type="primary"
               block
               className="checkout-btn"

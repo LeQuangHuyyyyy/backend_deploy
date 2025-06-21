@@ -20,7 +20,7 @@ const CardProduct = ({ product, imageUrl }) => {
       try {
         const response = await api.post("cart/items", {
           quantity: 1,
-          productId: product.id,
+          productId: product.productId,
         });
         showSuccessToast("Thêm sản phẩm vào giỏ hàng thành công!!");
         dispatch(addProductToCart(response.data));

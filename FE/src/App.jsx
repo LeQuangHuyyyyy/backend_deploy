@@ -28,10 +28,12 @@ import ResetPassword from "./pages/ResetPassword";
 import MarketingPage from "./pages/Marketing";
 import WorkshopDetailsPage from "./pages/WorkshopDetailsPage";
 import WorkshopDetails from "./pages/WorkshopDetails";
-import LayoutProfile from "./components/Layout-Profile"
+import LayoutProfile from "./components/Layout-Profile";
 import OrderSuccess from "./pages/order-success";
 import OrderFailed from "./pages/order-failed";
-
+import SocialPage from "./pages/SocialPage";
+import LayoutSocial from "./components/layoutsocial";
+import SocialGroup from "./pages/SocialGroup";
 
 function App() {
   const router = createBrowserRouter([
@@ -100,23 +102,23 @@ function App() {
           element: <HistoryTransaction />,
         },
         {
-          path: "forget-password",
+          path: "/forget-password",
           element: <ForgetPassword />,
         },
         {
-          path: "reset-password",
+          path: "/reset-password",
           element: <ResetPassword />,
         },
         {
-          path: "marketing",
+          path: "/marketing",
           element: <MarketingPage />,
         },
         {
-          path: "order-success",
+          path: "/order-success",
           element: <OrderSuccess />,
         },
         {
-          path: "order-failed",
+          path: "/order-failed",
           element: <OrderFailed />,
         },
         {
@@ -128,12 +130,26 @@ function App() {
               element: <Profile />,
             },
             {
-              path: "change-password",
+              path: "/my-account/change-password",
               element: <ChangePassword />,
             },
             {
-              path: "history-ticket",
+              path: "/my-account/history-ticket",
               element: <HistoryTicket />,
+            },
+          ],
+        },
+        {
+          path: "/my-social",
+          element: <LayoutSocial />,
+          children: [
+            {
+              path: "/my-social/",
+              element: <SocialPage />,
+            },
+            {
+              path: "/my-social/group",
+              element: <SocialGroup />,
             },
           ],
         },

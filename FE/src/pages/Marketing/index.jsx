@@ -50,19 +50,19 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 // Simulate upload and return a fake URL
-const fakeUpload = (file) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ url: URL.createObjectURL(file), name: file.name });
-    }, 800);
-  });
-};
+// const fakeUpload = (file) => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve({ url: URL.createObjectURL(file), name: file.name });
+//     }, 800);
+//   });
+// };
 
 const MarketingPage = () => {
   const [form] = Form.useForm();
   const [campaignType, setCampaignType] = useState("banner");
   const [fileList, setFileList] = useState([]);
-  const [bannerImage, setBannerImage] = useState(null);
+  //const [bannerImage, setBannerImage] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [campaigns, setCampaigns] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -73,64 +73,65 @@ const MarketingPage = () => {
   const [workshops, setWorkshops] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [urlImage, setUrlImage] = useState("");
+  //const [urlImage, setUrlImage] = useState("");
   const [categories, setCategories] = useState([]);
+  const [videoUrl, setVideoUrl] = useState("");
   // Temporary mock data for testing
-  useEffect(() => {
-    // Mock workshops data
-    // setWorkshops([
-    //   { id: 1, title: "Workshop 1: Digital Marketing Basics" },
-    //   { id: 2, title: "Workshop 2: Social Media Marketing" },
-    //   { id: 3, title: "Workshop 3: Content Creation" },
-    // ]);
+  //useEffect(() => {
+  // Mock workshops data
+  // setWorkshops([
+  //   { id: 1, title: "Workshop 1: Digital Marketing Basics" },
+  //   { id: 2, title: "Workshop 2: Social Media Marketing" },
+  //   { id: 3, title: "Workshop 3: Content Creation" },
+  // ]);
 
-    // Mock campaigns data
-    setCampaigns([
-      {
-        id: 1,
-        type: "banner",
-        title: "Summer Workshop Promotion",
-        description:
-          "Join our summer workshop series and learn digital marketing",
-        bannerImage: "https://picsum.photos/800/400",
-        status: "active",
-        views: 1200,
-        engagement: 75,
-        createdAt: new Date().toISOString(),
-        workshopId: 1,
-      },
-      {
-        id: 2,
-        type: "video",
-        title: "Workshop Preview",
-        description:
-          "Watch this video to see what you'll learn in our workshop",
-        videoFile: "https://www.w3schools.com/html/mov_bbb.mp4",
-        status: "active",
-        views: 2500,
-        engagement: 82,
-        createdAt: new Date().toISOString(),
-        workshopId: 2,
-      },
-      {
-        id: 3,
-        type: "carousel",
-        title: "Student Success Stories",
-        description:
-          "See how our workshops have helped students achieve their goals",
-        carouselImages: [
-          "https://picsum.photos/800/400?random=1",
-          "https://picsum.photos/800/400?random=2",
-          "https://picsum.photos/800/400?random=3",
-        ],
-        status: "active",
-        views: 1800,
-        engagement: 68,
-        createdAt: new Date().toISOString(),
-        workshopId: 3,
-      },
-    ]);
-  }, []);
+  // Mock campaigns data
+  //   setCampaigns([
+  //     {
+  //       id: 1,
+  //       type: "banner",
+  //       title: "Summer Workshop Promotion",
+  //       description:
+  //         "Join our summer workshop series and learn digital marketing",
+  //       bannerImage: "https://picsum.photos/800/400",
+  //       status: "active",
+  //       views: 1200,
+  //       engagement: 75,
+  //       createdAt: new Date().toISOString(),
+  //       workshopId: 1,
+  //     },
+  //     {
+  //       id: 2,
+  //       type: "video",
+  //       title: "Workshop Preview",
+  //       description:
+  //         "Watch this video to see what you'll learn in our workshop",
+  //       videoFile: "https://www.w3schools.com/html/mov_bbb.mp4",
+  //       status: "active",
+  //       views: 2500,
+  //       engagement: 82,
+  //       createdAt: new Date().toISOString(),
+  //       workshopId: 2,
+  //     },
+  //     {
+  //       id: 3,
+  //       type: "carousel",
+  //       title: "Student Success Stories",
+  //       description:
+  //         "See how our workshops have helped students achieve their goals",
+  //       carouselImages: [
+  //         "https://picsum.photos/800/400?random=1",
+  //         "https://picsum.photos/800/400?random=2",
+  //         "https://picsum.photos/800/400?random=3",
+  //       ],
+  //       status: "active",
+  //       views: 1800,
+  //       engagement: 68,
+  //       createdAt: new Date().toISOString(),
+  //       workshopId: 3,
+  //     },
+  //   ]);
+  // }, []);
 
   useEffect(() => {
     fetchCampaigns();
@@ -158,7 +159,6 @@ const MarketingPage = () => {
   // Xử lý upload ảnh lên Cloudinary
   const handleFileUpload = async ({ file }) => {
     const imageUrl = await uploadImageToCloudinary(file);
-    setUrlImage(imageUrl);
     if (imageUrl) {
       message.success("Upload ảnh thành công!");
       setFileList([{ uid: "-1", name: file.name, url: imageUrl }]);
@@ -177,7 +177,7 @@ const MarketingPage = () => {
   const handleVideoUpload = async () => {
     if (!videoFile) {
       alert("Please select a file to upload");
-      return;
+      return null;
     }
 
     let authParams;
@@ -185,7 +185,7 @@ const MarketingPage = () => {
       authParams = await authenticator();
     } catch (authError) {
       console.error("Failed to authenticate for upload:", authError);
-      return;
+      return null;
     }
     const { signature, expire, token, publicKey } = authParams;
 
@@ -207,6 +207,8 @@ const MarketingPage = () => {
         abortSignal: abortController.signal,
       });
       console.log("Upload response:", uploadResponse);
+      setVideoUrl(uploadResponse.url);
+      return uploadResponse.url;
     } catch (error) {
       // Handle specific error types provided by the ImageKit SDK.
       if (error instanceof ImageKitAbortError) {
@@ -221,6 +223,7 @@ const MarketingPage = () => {
         // Handle any other errors that may occur.
         console.error("Upload error:", error);
       }
+      return null;
     }
   };
   const authenticator = async () => {
@@ -246,9 +249,8 @@ const MarketingPage = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/marketing/campaigns");
-      const data = await response.json();
-      setCampaigns(data);
+      const response = await api.get("/marketing-campaigns");
+      setCampaigns(response.data.data);
     } catch (err) {
       console.log(err);
       message.error("Failed to fetch campaigns");
@@ -275,7 +277,7 @@ const MarketingPage = () => {
     }
     try {
       const instructorId = decodedToken?.id;
-      console.log(instructorId + "123");
+      console.log(instructorId + " instructorId");
       const response = await api.get(`/workshops/instructor/${instructorId}`);
       console.log(response);
       setWorkshops(response.data.content);
@@ -313,49 +315,50 @@ const MarketingPage = () => {
       "videoUrl",
       "bannerUrl",
     ]);
-    setBannerImage(null);
-    setVideoFile(null);
+    // setBannerImage(null);
+    // setVideoFile(null);
     setFileList([]);
   };
 
-  const handleBannerImageChange = async ({ file }) => {
-    if (file.status === "removed") {
-      setBannerImage(null);
-      form.setFieldsValue({ bannerImage: undefined });
-      return;
-    }
-    const res = await fakeUpload(file.originFileObj);
-    setBannerImage(res.url);
-    form.setFieldsValue({ bannerImage: res.url });
-  };
+  // const handleBannerImageChange = async ({ file }) => {
+  //   if (file.status === "removed") {
+  //     setBannerImage(null);
+  //     form.setFieldsValue({ bannerImage: undefined });
+  //     return;
+  //   }
+  //   const res = await fakeUpload(file.originFileObj);
+  //   setBannerImage(res.url);
+  //   form.setFieldsValue({ bannerImage: res.url });
+  // };
 
-  const handleVideoFileChange = async ({ file }) => {
-    if (file.status === "removed") {
-      setVideoFile(null);
-      form.setFieldsValue({ videoFile: undefined });
-      return;
-    }
-    const res = await fakeUpload(file.originFileObj);
-    setVideoFile(res.url);
-    form.setFieldsValue({ videoFile: res.url });
-  };
+  // const handleVideoFileChange = async ({ file }) => {
+  //   if (file.status === "removed") {
+  //     setVideoFile(null);
+  //     form.setFieldsValue({ videoFile: undefined });
+  //     return;
+  //   }
+  //   const res = await fakeUpload(file.originFileObj);
+  //   setVideoFile(res.url);
+  //   form.setFieldsValue({ videoFile: res.url });
+  // };
 
-  const handleCarouselChange = async ({ fileList }) => {
-    // Simulate upload for each file
-    const uploads = await Promise.all(
-      fileList.map(async (f) => {
-        if (f.url) return f.url;
-        const res = await fakeUpload(f.originFileObj);
-        return res.url;
-      })
-    );
-    setFileList(fileList);
-    form.setFieldsValue({ carouselImages: uploads });
-  };
+  // const handleCarouselChange = async ({ fileList }) => {
+  //   // Simulate upload for each file
+  //   const uploads = await Promise.all(
+  //     fileList.map(async (f) => {
+  //       if (f.url) return f.url;
+  //       const res = await fakeUpload(f.originFileObj);
+  //       return res.url;
+  //     })
+  //   );
+  //   setFileList(fileList);
+  //   form.setFieldsValue({ carouselImages: uploads });
+  // };
 
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
+      const uploadedVideoUrl = await handleVideoUpload();
       console.log(values);
       const bannerUrl = values.bannerImage?.[0]?.url;
 
@@ -367,22 +370,28 @@ const MarketingPage = () => {
         startDate: values.startTime.toISOString(),
         endDate: values.endTime.toISOString(),
       };
-
+      console.log(campaignPayload);
       await api.post("/marketing-campaigns", campaignPayload);
 
       if (bannerUrl) {
-        await api.post("media", {
-          videourl: bannerUrl,
+        await api.post("/media", {
+          videoUrl: bannerUrl,
           workshopId: values.workshopId,
         });
       }
 
+      if (uploadedVideoUrl) {
+        await api.post("/media", {
+          videoUrl: uploadedVideoUrl,
+          workshopId: values.workshopId,
+        });
+      }
       message.success("Tạo campaign thành công!");
       form.resetFields();
       setIsCreateModalVisible(false);
-      setBannerImage(null);
-      setVideoFile(null);
-      setFileList([]);
+      // setBannerImage(null);
+      // setVideoFile(null);
+      // setFileList([]);
       fetchCampaigns();
     } catch (err) {
       console.log("Error creating campaign:", err);
@@ -413,19 +422,9 @@ const MarketingPage = () => {
       onOk: async () => {
         try {
           setLoading(true);
-          const response = await fetch(
-            `/api/marketing/campaigns/${campaignId}`,
-            {
-              method: "DELETE",
-            }
-          );
-
-          if (response.ok) {
-            message.success("Campaign deleted successfully!");
-            fetchCampaigns();
-          } else {
-            message.error("Failed to delete campaign");
-          }
+          await api.delete(`/marketing-campaigns/${campaignId}`);
+          message.success("Campaign deleted successfully!");
+          fetchCampaigns();
         } catch (err) {
           console.log(err);
           message.error("An error occurred while deleting the campaign");
@@ -491,11 +490,14 @@ const MarketingPage = () => {
           <Form.Item
             name="videoFile"
             label="Upload Video File"
-            valuePropName="fileList"
-            getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
             rules={[{ required: true, message: "Please upload a video file" }]}
           >
-            <UploadExample onFileChange={(file) => setVideoFile(file)} />
+            <UploadExample
+              onFileChange={(file) => {
+                setVideoFile(file);
+                form.setFieldsValue({ videoFile: file });
+              }}
+            />
           </Form.Item>
         );
       case 3:
@@ -582,12 +584,12 @@ const MarketingPage = () => {
                       : "green"
                   }
                 >
-                  {campaign.type.toUpperCase()}
+                  {(campaign.type || "").toUpperCase()}
                 </Tag>
                 <Tag
                   color={campaign.status === "active" ? "success" : "default"}
                 >
-                  {campaign.status.toUpperCase()}
+                  {(campaign.status || "").toUpperCase()}
                 </Tag>
               </Space>
               <div className="campaign-stats">
@@ -744,9 +746,15 @@ const MarketingPage = () => {
             >
               {Array.isArray(categories) &&
                 categories
-                  .filter((category) => category.categoryId != null && category.categoryName)
+                  .filter(
+                    (category) =>
+                      category.categoryId != null && category.categoryName
+                  )
                   .map((category) => (
-                    <Option key={category.categoryId} value={category.categoryId}>
+                    <Option
+                      key={category.categoryId}
+                      value={category.categoryId}
+                    >
                       {category.categoryName}
                     </Option>
                   ))}
@@ -779,7 +787,7 @@ const MarketingPage = () => {
             label="Start Time"
             rules={[
               { required: true, message: "Please select start time" },
-              ({ getFieldValue }) => ({
+              () => ({
                 validator(_, value) {
                   if (!value) return Promise.resolve();
                   if (value.isBefore(new Date(), "minute")) {
