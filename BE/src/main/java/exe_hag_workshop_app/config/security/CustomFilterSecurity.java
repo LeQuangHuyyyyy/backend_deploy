@@ -67,8 +67,8 @@ public class CustomFilterSecurity {
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll()
-                        .requestMatchers("/api/cart/**", "/api/orders/**").authenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/cart/**", "/api/orders/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
