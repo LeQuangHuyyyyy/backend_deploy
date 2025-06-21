@@ -19,7 +19,26 @@ const WorkshopDetails = () => {
     name: "Công Ty TNHH Sân Khấu - Nghệ Thuật Thái Dương",
     description: "Nhà Hát Thanh Niên",
   };
+  const handleBuyTicket = async () => {
+    try {
+      const response = await api.post("/orders/workshop-order", {
+        workshopId: id,
+      });
 
+      const checkoutUrl = response.data?.data?.data?.checkoutUrl;
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        console.log(
+          "Purchase successful, but no checkout URL provided.",
+          response.data
+        );
+      }
+    } catch (error) {
+      console.error("Error buying ticket:", error);
+    }
+  };
   const fetchAllData = async () => {
     try {
       setLoading(true);
@@ -130,7 +149,9 @@ const WorkshopDetails = () => {
                   <i className="fa-regular fa-angle-right"></i>
                   <b>{formatTimeRange(item.startTime)}</b>
                 </span>
-                <button className="btn-main">Mua vé ngay</button>
+                <button className="btn-main" onClick={handleBuyTicket}>
+                  Mua vé ngay
+                </button>
               </div>
             ))}
         </div>

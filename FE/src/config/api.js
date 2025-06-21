@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-   baseURL: "https://hagworkshop.site/api", //
+  baseURL: "https://hagworkshop.site/api", //
   // https://hagworkshop.site/
 
-  timeout: 5000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
