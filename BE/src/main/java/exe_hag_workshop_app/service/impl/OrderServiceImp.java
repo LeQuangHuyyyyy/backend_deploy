@@ -138,6 +138,8 @@ public class OrderServiceImp implements OrderService {
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final double price = w.getPrice();
 
+
+
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
