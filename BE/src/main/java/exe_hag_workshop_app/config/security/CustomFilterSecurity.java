@@ -97,7 +97,7 @@ public class CustomFilterSecurity {
             allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
         }
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
