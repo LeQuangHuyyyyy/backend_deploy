@@ -87,7 +87,7 @@ public class CustomFilterSecurity {
         CorsConfiguration configuration = new CorsConfiguration();
 
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site","http://34.96.206.251:8080"};
         }
         configuration.setAllowedHeaders(List.of("*"));
 
