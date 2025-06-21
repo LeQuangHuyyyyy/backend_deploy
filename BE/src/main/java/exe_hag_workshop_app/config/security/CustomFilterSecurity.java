@@ -103,7 +103,6 @@ public class CustomFilterSecurity {
                 "Authorization",
                 "Content-Type",
                 "Accept",
-                "Origin",
                 "X-Requested-With",
                 "Access-Control-Request-Method",
                 "Access-Control-Request-Headers"
