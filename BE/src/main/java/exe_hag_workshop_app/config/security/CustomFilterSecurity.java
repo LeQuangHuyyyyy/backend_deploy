@@ -75,8 +75,8 @@ public class CustomFilterSecurity {
                         .redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/*"))
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .defaultSuccessUrl("/api/auth/oauth2/success", true)
-                )
-                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
+                );
+//                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
