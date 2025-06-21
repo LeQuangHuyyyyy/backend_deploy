@@ -132,7 +132,6 @@ public class OrderServiceImp implements OrderService {
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
 
-
         try {
             final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
