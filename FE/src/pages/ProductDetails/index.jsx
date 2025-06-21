@@ -72,7 +72,7 @@ const ProductDetail = () => {
         description: "Bạn cần đăng nhập tài khoản.",
         duration: 5,
       });
-      navigate("/login");
+      navigate("/loginAndRegister");
     }
   };
   const fetchProductDetail = async () => {
