@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/marketing-campaigns")
-@CrossOrigin(origins = "*")
 public class MarketingCampaignsController {
 
     @Autowired

@@ -58,6 +58,17 @@ public class JwtCustom extends OncePerRequestFilter {
             return;
         }
 
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())
+                || path.startsWith("/api/auth")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/api-docs")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/oauth2")
+                || path.startsWith("/login/oauth2")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getTokenFromHeader(request);
         if (token != null) {
             if (jwtTokenHelper.verifyToken(token)) {
