@@ -44,11 +44,23 @@ public class JwtCustom extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String path = request.getServletPath();
+
+        if (path.startsWith("/api/auth")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/api-docs")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/oauth2")
+                || path.startsWith("/login/oauth2")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getTokenFromHeader(request);
         if (token != null) {
             if (jwtTokenHelper.verifyToken(token)) {
-
                 SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(secretKey)
@@ -61,10 +73,11 @@ public class JwtCustom extends OncePerRequestFilter {
                 ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
                 grantedAuthorities.add(new SimpleGrantedAuthority(role.toUpperCase()));
                 Authentication usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, "", grantedAuthorities);
-                SecurityContext securityContext = SecurityContextHolder.getContext();
-                securityContext.setAuthentication(usernamePasswordAuthenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
         filterChain.doFilter(request, response);
     }
+
+
 } 

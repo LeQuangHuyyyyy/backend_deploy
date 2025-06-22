@@ -57,7 +57,30 @@ public class CustomFilterSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("Allowed Origins: " + Arrays.toString(allowedOrigins));
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll().requestMatchers(HttpMethod.GET, "/**").permitAll().requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll().requestMatchers("/api/cart/**", "/api/orders/**").permitAll().anyRequest().permitAll()).oauth2Login(oauth2 -> oauth2.authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization")).redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/*")).userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)).defaultSuccessUrl("/api/auth/oauth2/success", true)).addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).sessionManagement(
+                        session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers(PUBLIC_URLS).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/**").permitAll()
+
+
+                                .anyRequest().permitAll())
+                .oauth2Login(oauth2 ->
+                        oauth2.authorizationEndpoint(authorization ->
+                                        authorization.baseUri("/oauth2/authorization"))
+
+                                .redirectionEndpoint(redirection ->
+                                        redirection.baseUri("/login/oauth2/code/*"))
+
+                                .userInfoEndpoint(userInfo ->
+                                        userInfo.userService(customOAuth2UserService))
+
+                                .defaultSuccessUrl("/api/auth/oauth2/success", true))
+                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
