@@ -35,9 +35,7 @@ public class CustomFilterSecurity {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
-    public CustomFilterSecurity(JwtCustom jwtCustom,
-                                CustomUserDetailsService userDetailsService,
-                                CustomOAuth2UserService customOAuth2UserService) {
+    public CustomFilterSecurity(JwtCustom jwtCustom, CustomUserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) {
         this.jwtCustom = jwtCustom;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
@@ -54,30 +52,12 @@ public class CustomFilterSecurity {
             "/api-docs/**",
             "/v3/api-docs/**",
             "/oauth2/**",
-            "/login/oauth2/**"
-    };
+            "/login/oauth2/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("Allowed Origins: " + Arrays.toString(allowedOrigins));
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Sửa tại đây
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll()
-                        .requestMatchers("/api/cart/**", "/api/orders/**").permitAll()
-                        .anyRequest().permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/*"))
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/api/auth/oauth2/success", true)
-                );
-//                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll().requestMatchers(HttpMethod.GET, "/**").permitAll().requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll().requestMatchers("/api/cart/**", "/api/orders/**").permitAll().anyRequest().permitAll()).oauth2Login(oauth2 -> oauth2.authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization")).redirectionEndpoint(redirection -> redirection.baseUri("/login/oauth2/code/*")).userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)).defaultSuccessUrl("/api/auth/oauth2/success", true)).addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -88,15 +68,13 @@ public class CustomFilterSecurity {
         CorsConfiguration configuration = new CorsConfiguration();
 
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site","http://34.96.206.251:8080"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site", "http://34.96.206.251:8080"};
         }
-        configuration.setAllowedHeaders(List.of("*"));
-
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "Accept", "Origin"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
