@@ -48,18 +48,12 @@ public class JwtCustom extends OncePerRequestFilter {
             throws ServletException, IOException {
         String path = request.getServletPath();
 
-        if (path.startsWith("/api/auth")
-                || path.startsWith("/swagger-ui")
-                || path.startsWith("/api-docs")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/oauth2")
-                || path.startsWith("/login/oauth2")) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())
-                || path.startsWith("/api/auth")
+        if (path.startsWith("/api/auth")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/api-docs")
                 || path.startsWith("/v3/api-docs")
@@ -91,4 +85,4 @@ public class JwtCustom extends OncePerRequestFilter {
     }
 
 
-} 
+}
