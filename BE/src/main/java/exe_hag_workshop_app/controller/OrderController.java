@@ -69,7 +69,7 @@ public class OrderController {
     }
 
     @GetMapping("order-success-instructor/{id}")
-    public ResponseEntity<?> getOrderSuccessByInstructor(@PathVariable ("id") int instructorId) {
+    public ResponseEntity<?> getOrderSuccessByInstructor(@PathVariable("id") int instructorId) {
         try {
             List<OrderRequest> orders = orderService.getAllOrdersSuccess();
             return new ResponseEntity<>(orders, HttpStatus.OK);
