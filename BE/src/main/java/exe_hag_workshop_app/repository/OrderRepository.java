@@ -2,6 +2,7 @@ package exe_hag_workshop_app.repository;
 
 import exe_hag_workshop_app.entity.Enums.OrderStatus;
 import exe_hag_workshop_app.entity.Orders;
+import exe_hag_workshop_app.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,12 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
+
+    List<Orders> findByUser_UserIdAndStatus(int userId, OrderStatus status);
+
+    List<Orders> findByOrderDetails_Workshop_Instructor(Users instructor);
+
+
     List<Orders> findByUser_UserId(int userId);
     List<Orders> findByStatus(OrderStatus status);
     List<Orders> findByOrderDateBetween(Date startDate, Date endDate);

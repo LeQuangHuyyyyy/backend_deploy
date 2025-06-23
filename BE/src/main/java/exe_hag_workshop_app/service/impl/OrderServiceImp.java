@@ -86,6 +86,49 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    public List<OrderRequest> getAllOrdersSuccess() {
+        Users user = userRepository.findById(jwtTokenHelper.getUserIdFromToken()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return orderRepository.findByUser_UserIdAndStatus(user.getUserId(), OrderStatus.COMPLETED).stream().map(o -> {
+            OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(o, request);
+
+            List<ProductInCartRequest> productInCartList = o.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderRequest> getAllOrdersSuccessByInstructor(int instructorId) {
+        Users instructor = userRepository.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
+
+        return orderRepository.findByOrderDetails_Workshop_Instructor(instructor).stream().map(o -> {
+            OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(o, request);
+
+            List<ProductInCartRequest> productInCartList = o.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+
+    }
+
+    @Override
     public OrderRequest getOrderById(int orderId) throws ResourceNotFoundException {
         Orders order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order"));
 

@@ -58,6 +58,26 @@ public class OrderController {
         }
     }
 
+    @GetMapping("order-success")
+    public ResponseEntity<?> getOrderSuccess() {
+        try {
+            List<OrderRequest> orders = orderService.getAllOrdersSuccess();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("order-success-instructor/{id}")
+    public ResponseEntity<?> getOrderSuccessByInstructor(@PathVariable ("id") int instructorId) {
+        try {
+            List<OrderRequest> orders = orderService.getAllOrdersSuccess();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest order) {
         try {
@@ -100,10 +120,6 @@ public class OrderController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-//
-//
-//
-//
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getOrdersByUser(@PathVariable("userId") int userId) {

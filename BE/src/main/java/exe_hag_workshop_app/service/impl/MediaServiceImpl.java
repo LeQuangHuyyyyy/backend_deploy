@@ -57,5 +57,15 @@ public class MediaServiceImpl implements MediaService {
         return mediaDTO;
     }
 
+    @Override
+    public List<MediaDTO> getAllMedia() {
+        List<Media> mediaList = mediaRepository.findAll();
+        return mediaList.stream().map(media -> {
+            MediaDTO mediaDTO = new MediaDTO();
+            BeanUtils.copyProperties(media, mediaDTO);
+            return mediaDTO;
+        }).collect(Collectors.toList());
+    }
+
 
 } 
