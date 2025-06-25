@@ -19,8 +19,6 @@ const InstructorInfo = () => {
     if (typeof token === "string" && token) {
       const decoded = jwtDecode(token);
       setInstructor(decoded);
-      console.log(decoded);
-      console.log("Thông tin người dùng:", decoded);
     } else {
       console.log("Không tìm thấy token hợp lệ");
       // có thể redirect về trang login tại đây
@@ -47,8 +45,8 @@ const InstructorInfo = () => {
   // Lấy dữ liệu tài khoản từ API
   const fetchAccountData = async () => {
     try {
-      const response = await api.get("users/me");
-      console.log(response.data);
+      const response = await api.get("/users/me");
+      
       setData(response.data);
     } catch (error) {
       console.error(error);

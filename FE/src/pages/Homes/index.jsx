@@ -48,7 +48,7 @@ function Home() {
       image: "/img/aaaa.png",
       title: "Sự kiện 1",
       video:
-        "https://ik.imagekit.io/hp1dcwmpu/AQPm_nd7UDY0MGGKIerRBlNYmJ9PdySQFeiPSZ_GZ32jKRhFxj8cbZmAp5K-j5djOjtpUq8o7RKgAU96lLhVrsPy.mp4?updatedAt=1749233089993",
+        "https://www.youtube.com/shorts/uGPjAtzCNrY",
     },
     {
       id: 2,
@@ -56,35 +56,39 @@ function Home() {
       title: "Sự kiện 2",
       link: "https://chat.openai.com/",
       video:
-        "../../../public/img/Administrator_ TimeRift - Scene1 - Windows, Mac, Linux - Unity 6 (6000.0.32f1) _DX11_ 2025-02-03 21-06-47.mp4",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     {
       id: 3,
+      link: "https://chat.openai.com/",
       image: "/img/aaaa.png",
       title: "Sự kiện 3",
       video:
-        "../../../public/img/Administrator_ TimeRift - Scene1 - Windows, Mac, Linux - Unity 6 (6000.0.32f1) _DX11_ 2025-02-03 21-06-47.mp4",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     {
       id: 4,
+      link: "https://chat.openai.com/",
       image: "/img/aaaa.png",
       title: "Sự kiện 4",
       video:
-        "../../../public/img/Administrator_ TimeRift - Scene1 - Windows, Mac, Linux - Unity 6 (6000.0.32f1) _DX11_ 2025-02-03 21-06-47.mp4",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     {
       id: 5,
+      link: "https://chat.openai.com/",
       image: "/img/aaaa.png",
       title: "Sự kiện 5",
       video:
-        "../../../public/img/Administrator_ TimeRift - Scene1 - Windows, Mac, Linux - Unity 6 (6000.0.32f1) _DX11_ 2025-02-03 21-06-47.mp4",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     {
       id: 6,
+      link: "https://chat.openai.com/",
       image: "/img/aaaa.png",
       title: "Sự kiện 6",
       video:
-        "../../../public/img/Administrator_ TimeRift - Scene1 - Windows, Mac, Linux - Unity 6 (6000.0.32f1) _DX11_ 2025-02-03 21-06-47.mp4",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     // ...
   ];
