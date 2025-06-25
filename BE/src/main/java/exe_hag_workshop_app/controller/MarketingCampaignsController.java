@@ -52,6 +52,11 @@ public class MarketingCampaignsController {
         return ResponseEntity.ok(marketingCampaignsService.getWorkshopsByCategories());
     }
 
+    @GetMapping("/{instructorId}")
+    public ResponseEntity<?> getCampaignsByInstructors(@PathVariable int instructorId) {
+        return ResponseEntity.ok(marketingCampaignsService.getMarketingCampaignsByInstructors(instructorId));
+    }
+
     @GetMapping("/categories")
     public ResponseEntity<ResponseData> getAllCategories() {
         return ResponseEntity.ok(marketingCampaignsService.getAllCategories());
@@ -61,7 +66,18 @@ public class MarketingCampaignsController {
     public ResponseEntity<?> createCategory(@RequestBody MarketingCampaignsCategoryData category) {
         marketingCampaignsService.createCategory(category);
         return ResponseEntity.ok().build();
-
-
     }
+
+    @GetMapping("/marketing-campaign/{mediaId}")
+    public ResponseEntity<?> getMarketingCampaignByMediaId(@PathVariable int mediaId) {
+        return ResponseEntity.ok(marketingCampaignsService.getMarketingCampaignByMediaId(mediaId));
+    }
+
+    @PutMapping("/marketing-campaign/status")
+    public ResponseEntity<?> updateMarketingCampaignStatus(@PathVariable int id, @RequestParam String status) {
+        marketingCampaignsService.updateMarketingCampaignStatus(id);
+        return ResponseEntity.ok().build();
+    }
+
+    
 }

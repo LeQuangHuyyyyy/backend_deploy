@@ -5,6 +5,8 @@ import exe_hag_workshop_app.payload.MarketingCampaignsRequest;
 import exe_hag_workshop_app.payload.MarketingCampaignsResponse;
 import exe_hag_workshop_app.payload.ResponseData;
 
+import java.util.List;
+
 
 public interface MarketingCampaignsService {
     MarketingCampaignsResponse createMarketingCampaign(MarketingCampaignsRequest request);
@@ -15,6 +17,10 @@ public interface MarketingCampaignsService {
 
     MarketingCampaignsResponse getMarketingCampaignById(int id);
 
+    List<MarketingCampaignsResponse> getMarketingCampaignsByInstructors(int instructorId);
+
+    List<MarketingCampaignsResponse> getMarketingCampaignByMediaId(int mediaId);
+
     ResponseData getAllMarketingCampaigns();
 
     ResponseData getMarketingCampaignsByCategory(int categoryId);
@@ -24,4 +30,6 @@ public interface MarketingCampaignsService {
     ResponseData getAllCategories();
 
     ResponseData createCategory(MarketingCampaignsCategoryData categoryData);
+
+    void updateMarketingCampaignStatus(int marketingCampaignId);
 }

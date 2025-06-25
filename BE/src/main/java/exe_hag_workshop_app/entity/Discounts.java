@@ -42,9 +42,6 @@ public class Discounts {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "is_membership")
-    private boolean isMembership;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
