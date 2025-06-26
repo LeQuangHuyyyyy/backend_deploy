@@ -7,7 +7,7 @@ public class CommentResponse {
     private int commentId;
     private String content;
     private String createdAt;
-    private boolean isAnswer;
+    private boolean answer;
     private int commentAnswer;
     private int socialPostId;
     private int userId;

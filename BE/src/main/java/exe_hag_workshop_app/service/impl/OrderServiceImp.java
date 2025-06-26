@@ -176,7 +176,7 @@ public class OrderServiceImp implements OrderService {
         order = orderRepository.save(order);
 
         try {
-            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final double price = w.getPrice();
 
@@ -205,17 +205,10 @@ public class OrderServiceImp implements OrderService {
         String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
         Users user = userRepository.findById(cart.getUser().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        System.out.println("Cart found: " + cart.getCartId());
-        System.out.println("Cart total amount: " + cart.getTotalAmount());
-        System.out.println("Cart items count: " + (cart.getCartItems() != null ? cart.getCartItems().size() : 0));
-
         // Chỉ tìm discount nếu discountId > 0 (có giá trị hợp lệ)
         Discounts discounts = null;
         if (orderRequest.getDiscountId() > 0) {
             discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
-            System.out.println("Discount found: " + (discounts != null ? discounts.getDiscountId() : "null"));
-        } else {
-            System.out.println("No discount applied (discountId = 0)");
         }
 
         Orders order = new Orders();
@@ -225,11 +218,6 @@ public class OrderServiceImp implements OrderService {
         if (discounts != null) {
             int percentDiscount = discounts.getDiscountPercentage();
             totalAmount = cart.getTotalAmount() * (1 - percentDiscount / 100.0);
-            System.out.println("Applied discount: " + percentDiscount + "%");
-            System.out.println("Original amount: " + cart.getTotalAmount());
-            System.out.println("Final amount after discount: " + totalAmount);
-        } else {
-            System.out.println("No discount applied, using original amount: " + totalAmount);
         }
 
         order.setOrderDate(new Date());
@@ -273,47 +261,16 @@ public class OrderServiceImp implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            // Validation: Kiểm tra totalAmount có hợp lệ không
-            if (totalAmount <= 0) {
-                System.err.println("Error: Total amount is invalid: " + totalAmount);
-                response.put("error", -1);
-                response.put("message", "Invalid total amount");
-                response.set("data", null);
-                return response;
-            }
-
-            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final int price = (int) totalAmount; // Sử dụng totalAmount đã tính toán với discount
-
-            System.out.println("Creating payment link with:");
-            System.out.println("Order ID: " + order.getOrderId());
-            System.out.println("Total Amount: " + totalAmount);
-            System.out.println("Price for payment: " + price);
-            System.out.println("Return URL: " + returnUrl);
-            System.out.println("Cancel URL: " + cancelUrl);
 
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
-            System.out.println("Order Code: " + orderCode);
-
             PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description("Thanh toan don hang").amount(price).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
 
-            System.out.println("Payment Data: " + paymentData.toString());
-
-            // Kiểm tra PayOS instance
-            if (payOS == null) {
-                System.err.println("Error: PayOS instance is null");
-                response.put("error", -1);
-                response.put("message", "Payment service not configured");
-                response.set("data", null);
-                return response;
-            }
-
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
-
-            System.out.println("PayOS Response: " + data.toString());
 
             response.put("error", 0);
             response.put("message", "success");
@@ -321,18 +278,9 @@ public class OrderServiceImp implements OrderService {
             return response;
 
         } catch (Exception e) {
-            System.err.println("Error creating payment link:");
             e.printStackTrace();
-            System.err.println("Exception message: " + e.getMessage());
-            System.err.println("Exception type: " + e.getClass().getSimpleName());
-
-            // Log thêm thông tin về exception
-            if (e.getCause() != null) {
-                System.err.println("Cause: " + e.getCause().getMessage());
-            }
-
             response.put("error", -1);
-            response.put("message", "fail: " + e.getMessage());
+            response.put("message", "fail");
             response.set("data", null);
             return response;
         }
@@ -343,7 +291,6 @@ public class OrderServiceImp implements OrderService {
         String orderId = request.getParameter("orderId");
         Orders order = orderRepository.findById(Integer.parseInt(orderId)).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
     }
 
     @Override
@@ -351,8 +298,6 @@ public class OrderServiceImp implements OrderService {
         String orderId = request.getParameter("orderId");
         Orders order = orderRepository.findById(Integer.parseInt(orderId)).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         order.setStatus(OrderStatus.COMPLETED);
-        orderRepository.save(order);
-
     }
 
 //
