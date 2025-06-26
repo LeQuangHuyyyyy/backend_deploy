@@ -176,7 +176,7 @@ public class OrderServiceImp implements OrderService {
         order = orderRepository.save(order);
 
         try {
-            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final double price = w.getPrice();
 
@@ -282,7 +282,7 @@ public class OrderServiceImp implements OrderService {
                 return response;
             }
 
-            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final int price = (int) totalAmount; // Sử dụng totalAmount đã tính toán với discount
 
