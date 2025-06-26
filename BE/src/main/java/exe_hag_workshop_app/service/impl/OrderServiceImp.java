@@ -204,22 +204,27 @@ public class OrderServiceImp implements OrderService {
         Cart cart = cartRepository.findById(orderRequest.getCartId()).orElseThrow(() -> new ResourceNotFoundException("Cart"));
         String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
         Users user = userRepository.findById(cart.getUser().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Discounts discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
+
+        // Chỉ tìm discount nếu discountId > 0 (có giá trị hợp lệ)
+        Discounts discounts = null;
+        if (orderRequest.getDiscountId() > 0) {
+            discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
+        }
 
         Orders order = new Orders();
+        double totalAmount = cart.getTotalAmount();
 
+        // Tính toán totalAmount với discount nếu có
         if (discounts != null) {
             int percentDiscount = discounts.getDiscountPercentage();
-            order.setTotalAmount(cart.getTotalAmount() * (percentDiscount / 100.0));
-        } else {
-            order.setTotalAmount(cart.getTotalAmount());
+            totalAmount = cart.getTotalAmount() * (1 - percentDiscount / 100.0);
         }
 
         order.setOrderDate(new Date());
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
         order.setShippingAddress(orderRequest.getShippingAddress());
-        order.setTotalAmount(cart.getTotalAmount());
+        order.setTotalAmount(totalAmount); // Chỉ set một lần với giá trị đã tính toán
         order.setStatus(OrderStatus.PENDING);
         order.setPhoneNumber(phoneNumber);
         order.setDiscounts(discounts);
@@ -253,13 +258,12 @@ public class OrderServiceImp implements OrderService {
 
         request.setProductInCartRequests(productInCartList);
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
             final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
-            final int price = (int) cart.getTotalAmount();
+            final int price = (int) totalAmount; // Sử dụng totalAmount đã tính toán với discount
 
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
