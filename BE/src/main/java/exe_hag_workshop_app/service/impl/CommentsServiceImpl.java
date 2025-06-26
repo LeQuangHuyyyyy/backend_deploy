@@ -7,7 +7,9 @@ import exe_hag_workshop_app.entity.Comments;
 import exe_hag_workshop_app.exception.ResourceNotFoundException;
 import exe_hag_workshop_app.repository.BlogRepository;
 import exe_hag_workshop_app.repository.CommentsRepository;
+import exe_hag_workshop_app.repository.UserRepository;
 import exe_hag_workshop_app.service.CommentsService;
+import exe_hag_workshop_app.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,34 +21,38 @@ import java.util.stream.Collectors;
 public class CommentsServiceImpl implements CommentsService {
 
     @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    @Autowired
     private CommentsRepository commentsRepository;
 
     @Autowired
     private BlogRepository blogRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<CommentsResponse> getAllComments() {
-        return commentsRepository.findAll().stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+        return commentsRepository.findAll().stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     @Override
     public CommentsResponse getCommentById(Integer commentId) throws ResourceNotFoundException {
-        Comments comment = commentsRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
+        Comments comment = commentsRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
         return convertToResponse(comment);
     }
 
     @Override
     public CommentsResponse createComment(CommentsRequest commentsRequest) throws ResourceNotFoundException {
-        Blogs blog = blogRepository.findById(commentsRequest.getBlogId())
-                .orElseThrow(() -> new ResourceNotFoundException("Blog not found with id: " + commentsRequest.getBlogId()));
+        Blogs blog = blogRepository.findById(commentsRequest.getBlogId()).orElseThrow(() -> new ResourceNotFoundException("Blog not found with id: " + commentsRequest.getBlogId()));
+
+        int userId = jwtTokenHelper.getUserIdFromToken();
 
         Comments comment = new Comments();
         comment.setCommentText(commentsRequest.getCommentText());
-        comment.setAuthorName(commentsRequest.getAuthorName());
         comment.setBlog(blog);
+        comment.setAuthorName(userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId)).getFirstName());
         comment.setDateCreated(new Date());
 
         Comments savedComment = commentsRepository.save(comment);
@@ -55,19 +61,14 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     public CommentsResponse updateComment(Integer commentId, CommentsRequest commentsRequest) throws ResourceNotFoundException {
-        Comments comment = commentsRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
+        Comments comment = commentsRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
 
         if (commentsRequest.getCommentText() != null) {
             comment.setCommentText(commentsRequest.getCommentText());
         }
-        if (commentsRequest.getAuthorName() != null) {
-            comment.setAuthorName(commentsRequest.getAuthorName());
-        }
 
         if (commentsRequest.getBlogId() != null) {
-            Blogs blog = blogRepository.findById(commentsRequest.getBlogId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Blog not found with id: " + commentsRequest.getBlogId()));
+            Blogs blog = blogRepository.findById(commentsRequest.getBlogId()).orElseThrow(() -> new ResourceNotFoundException("Blog not found with id: " + commentsRequest.getBlogId()));
             comment.setBlog(blog);
         }
 
@@ -85,16 +86,12 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     public List<CommentsResponse> getCommentsByBlogId(Integer blogId) {
-        return commentsRepository.findByBlog_BlogId(blogId).stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+        return commentsRepository.findByBlog_BlogId(blogId).stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<CommentsResponse> getCommentsByAuthorName(String authorName) {
-        return commentsRepository.findByAuthorName(authorName).stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+        return commentsRepository.findByAuthorName(authorName).stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     private CommentsResponse convertToResponse(Comments comment) {
