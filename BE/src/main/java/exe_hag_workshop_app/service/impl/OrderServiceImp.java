@@ -103,7 +103,9 @@ public class OrderServiceImp implements OrderService {
                 re.setProductName(od.getProduct().getProductName());
                 re.setQuantity(od.getQuantity());
                 re.setPrice(od.getUnitPrice());
-                re.setWorkshopId(od.getWorkshop().getWorkshopId());
+                if (od.getWorkshop() != null) {
+                    re.setWorkshopId(od.getWorkshop().getWorkshopId());
+                }
                 return re;
             }).collect(Collectors.toList());
 
