@@ -99,14 +99,13 @@ public class OrderServiceImp implements OrderService {
 
             List<ProductInCartRequest> productInCartList = o.getOrderDetails().stream().map(od -> {
                 ProductInCartRequest re = new ProductInCartRequest();
+
                 re.setProductId(od.getProduct().getProductId());
                 re.setProductName(od.getProduct().getProductName());
                 re.setQuantity(od.getQuantity());
                 re.setPrice(od.getUnitPrice());
                 if (od.getWorkshop() != null) {
                     re.setWorkshopId(od.getWorkshop().getWorkshopId());
-                } else {
-                    re.setWorkshopId(0);
                 }
                 return re;
             }).collect(Collectors.toList());
@@ -181,7 +180,7 @@ public class OrderServiceImp implements OrderService {
         OrderDetails od = new OrderDetails();
         od.setOrder(finalOrder);
         od.setUnitPrice(order.getTotalAmount());
-
+        od.setWorkshop(w);
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
 
