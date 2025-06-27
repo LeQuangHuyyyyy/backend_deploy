@@ -13,16 +13,21 @@ import java.util.List;
 
 @Repository
 public interface WorkshopRepository extends JpaRepository<Workshops, Integer> {
+    Page<Workshops> findAll(Pageable pageable);
+
     Page<Workshops> findByInstructor_UserId(int instructorId, Pageable pageable);
-    
+
     Page<Workshops> findByPriceBetween(double minPrice, double maxPrice, Pageable pageable);
-    
+
     Page<Workshops> findByWorkshopTitleContainingIgnoreCase(String keyword, Pageable pageable);
 
     @Query("SELECT w FROM Workshops w JOIN w.schedules s WHERE s.startTime > :currentDate")
     Page<Workshops> findUpcomingWorkshops(@Param("currentDate") Date currentDate, Pageable pageable);
 
     @Query("SELECT COALESCE(SUM(o.subtotal), 0) FROM Workshops w JOIN w.orderDetails o " +
-           "WHERE w.workshopId = :workshopId")
+            "WHERE w.workshopId = :workshopId")
     double calculateWorkshopRevenue(@Param("workshopId") int workshopId);
+
+    @Query("SELECT COALESCE(AVG(w.price), 0) FROM Workshops w")
+    double calculateAveragePrice();
 }

@@ -29,6 +29,8 @@ public interface WorkshopService {
 
     double calculateWorkshopRevenue(int workshopId);
 
+    double calculateAveragePrice();
+
 //    getUserInWorkshopByInstructor
 
 }

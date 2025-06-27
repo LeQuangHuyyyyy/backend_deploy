@@ -27,9 +27,7 @@ public class WorkshopController {
 
     @GetMapping
     public ResponseEntity<Page<WorkshopResponse>> getAllWorkshops(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-
         Pageable pageable = PageRequest.of(page, size);
-
         Page<WorkshopResponse> workshops = workshopService.getAllWorkshops(pageable);
         return ResponseEntity.ok(workshops);
     }
@@ -111,6 +109,12 @@ public class WorkshopController {
     public ResponseEntity<?> getWorkshopRevenue(@PathVariable("id") int workshopId) {
         double revenue = workshopService.calculateWorkshopRevenue(workshopId);
         return new ResponseEntity<>(revenue, HttpStatus.OK);
+    }
+
+    @GetMapping("/average-price")
+    public ResponseEntity<?> getAveragePrice() {
+        double averagePrice = workshopService.calculateAveragePrice();
+        return new ResponseEntity<>(averagePrice, HttpStatus.OK);
     }
 
 
