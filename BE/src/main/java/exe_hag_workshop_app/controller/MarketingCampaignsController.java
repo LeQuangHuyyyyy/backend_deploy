@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/marketing-campaigns")
 public class MarketingCampaignsController {
@@ -42,19 +44,24 @@ public class MarketingCampaignsController {
         return ResponseEntity.ok(marketingCampaignsService.getAllMarketingCampaigns());
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/by-category/{categoryId}")
     public ResponseEntity<ResponseData> getCampaignsByCategory(@PathVariable int categoryId) {
         return ResponseEntity.ok(marketingCampaignsService.getMarketingCampaignsByCategory(categoryId));
+    }
+
+    @GetMapping("/by-instructor/{instructorId}")
+    public ResponseEntity<ResponseData> getCampaignsByInstructor(@PathVariable int instructorId) {
+        List<MarketingCampaignsResponse> campaigns = marketingCampaignsService.getMarketingCampaignsByInstructors(instructorId);
+        ResponseData responseData = new ResponseData();
+        responseData.setStatus(200);
+        responseData.setDescription("Success");
+        responseData.setData(campaigns);
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/workshops-by-categories")
     public ResponseEntity<ResponseData> getWorkshopsByCategories() {
         return ResponseEntity.ok(marketingCampaignsService.getWorkshopsByCategories());
-    }
-
-    @GetMapping("/{instructorId}")
-    public ResponseEntity<?> getCampaignsByInstructors(@PathVariable int instructorId) {
-        return ResponseEntity.ok(marketingCampaignsService.getMarketingCampaignsByInstructors(instructorId));
     }
 
     @GetMapping("/categories")
@@ -68,16 +75,19 @@ public class MarketingCampaignsController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/marketing-campaign/{mediaId}")
-    public ResponseEntity<?> getMarketingCampaignByMediaId(@PathVariable int mediaId) {
-        return ResponseEntity.ok(marketingCampaignsService.getMarketingCampaignByMediaId(mediaId));
+    @GetMapping("/by-media/{mediaId}")
+    public ResponseEntity<ResponseData> getMarketingCampaignByMediaId(@PathVariable int mediaId) {
+        List<MarketingCampaignsResponse> campaigns = marketingCampaignsService.getMarketingCampaignByMediaId(mediaId);
+        ResponseData responseData = new ResponseData();
+        responseData.setStatus(200);
+        responseData.setDescription("Success");
+        responseData.setData(campaigns);
+        return ResponseEntity.ok(responseData);
     }
 
-    @PutMapping("/marketing-campaign/status")
+    @PutMapping("/{id}/status")
     public ResponseEntity<?> updateMarketingCampaignStatus(@PathVariable int id, @RequestParam String status) {
         marketingCampaignsService.updateMarketingCampaignStatus(id);
         return ResponseEntity.ok().build();
     }
-
-    
 }

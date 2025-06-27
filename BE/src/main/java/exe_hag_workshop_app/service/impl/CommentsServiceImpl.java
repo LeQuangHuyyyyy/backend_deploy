@@ -51,8 +51,7 @@ public class CommentsServiceImpl implements CommentsService {
         Comments comment = new Comments();
         comment.setCommentText(commentsRequest.getCommentText());
         comment.setBlog(blog);
-        comment.setAuthorName(userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId)).getFirstName());
+        comment.setAuthorName(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId)).getFirstName());
         comment.setDateCreated(new Date());
 
         Comments savedComment = commentsRepository.save(comment);
