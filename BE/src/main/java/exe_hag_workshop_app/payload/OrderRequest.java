@@ -20,7 +20,7 @@ public class OrderRequest {
     private String customerEmail; // Email để gửi thông tin đơn hàng
     private String note;
 
-    private int orderId; // Mã đơn hàng
+
 
     private List<ProductInCartRequest> productInCartRequests;
 }
