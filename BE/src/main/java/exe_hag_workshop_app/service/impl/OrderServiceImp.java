@@ -184,11 +184,11 @@ public class OrderServiceImp implements OrderService {
         OrderDetails od = new OrderDetails();
         od.setOrder(finalOrder);
         od.setUnitPrice(order.getTotalAmount());
-        od.setWorkshop(w);
+        od.setWorkshop(workshopRepository.findById(orderRequest.getWorkshopId()).orElseThrow(() -> new ResourceNotFoundException("Workshop not found with ID: " + orderRequest.getWorkshopId())));
 
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
-        orderDetailRepository.save(od);
+
 
         try {
             final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
@@ -239,7 +239,7 @@ public class OrderServiceImp implements OrderService {
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
         order.setShippingAddress(orderRequest.getShippingAddress());
-        order.setTotalAmount(totalAmount); // Chỉ set một lần với giá trị đã tính toán
+        order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.PENDING);
         order.setPhoneNumber(phoneNumber);
         order.setDiscounts(discounts);
