@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -53,5 +52,14 @@ public class UserController {
         dto.setAvatarUrl(user.getAvatar());
         dto.setActive(user.isActive());
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("getOrdersWorkShopByUserId")
+    public ResponseEntity<?> getOrdersWorkShopByUserId() {
+        try {
+            return ResponseEntity.ok(userService.getOrdersWorkShopByUserId());
+        } catch (UserValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -11,11 +11,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/media")
-@CrossOrigin(origins = "*")
 public class MediaController {
 
     @Autowired
     private MediaService mediaService;
+
+    @GetMapping
+    public ResponseEntity<List<MediaDTO>> getAllMedia() {
+        List<MediaDTO> mediaList = mediaService.getAllMedia();
+        return ResponseEntity.ok(mediaList);
+    }
 
     @PostMapping
     public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDTO) {
@@ -40,5 +45,5 @@ public class MediaController {
         MediaDTO media = mediaService.getMediaById(mediaId);
         return ResponseEntity.ok(media);
     }
-    
+
 }

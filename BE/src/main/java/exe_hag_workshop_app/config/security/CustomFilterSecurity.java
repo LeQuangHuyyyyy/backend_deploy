@@ -35,9 +35,7 @@ public class CustomFilterSecurity {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
-    public CustomFilterSecurity(JwtCustom jwtCustom,
-                                CustomUserDetailsService userDetailsService,
-                                CustomOAuth2UserService customOAuth2UserService) {
+    public CustomFilterSecurity(JwtCustom jwtCustom, CustomUserDetailsService userDetailsService, CustomOAuth2UserService customOAuth2UserService) {
         this.jwtCustom = jwtCustom;
         this.userDetailsService = userDetailsService;
         this.customOAuth2UserService = customOAuth2UserService;
@@ -45,6 +43,7 @@ public class CustomFilterSecurity {
 
     public static final String[] PUBLIC_URLS = {
             "/api/auth/login",
+            "/api/auth/**",
             "/api/auth/register",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",
@@ -53,68 +52,57 @@ public class CustomFilterSecurity {
             "/api-docs/**",
             "/v3/api-docs/**",
             "/oauth2/**",
-            "/login/oauth2/**"
-    };
+            "/login/oauth2/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        System.out.println("Allowed Origins: " + Arrays.toString(allowedOrigins));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).sessionManagement(
+                        session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .csrf(AbstractHttpConfigurer::disable)
-                .userDetailsService(userDetailsService)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers("/api/products/**", "/api/categories/**", "/api/blogs/**").permitAll()
-                        .requestMatchers("/api/cart/**", "/api/orders/**").authenticated()
-                        .anyRequest().authenticated()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorization")
-                        )
-                        .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/login/oauth2/code/*")
-                        )
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
-                        .defaultSuccessUrl("/api/auth/oauth2/success", true)
-                )
+
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers(PUBLIC_URLS).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/**").permitAll()
+
+
+                                .anyRequest().permitAll())
+                .oauth2Login(oauth2 ->
+                        oauth2.authorizationEndpoint(authorization ->
+                                        authorization.baseUri("/oauth2/authorization"))
+
+                                .redirectionEndpoint(redirection ->
+                                        redirection.baseUri("/login/oauth2/code/*"))
+
+                                .userInfoEndpoint(userInfo ->
+                                        userInfo.userService(customOAuth2UserService))
+
+                                .defaultSuccessUrl("/api/auth/oauth2/success", true))
                 .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
         if (allowedOrigins == null || allowedOrigins.length == 0) {
-            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site"};
+            allowedOrigins = new String[]{"http://localhost:5173", "http://localhost:8080", "https://exe-fe-flax.vercel.app", "https://hagworkshop.site", "http://34.96.206.251:8080"};
         }
-
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "Accept", "Origin"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type",
-                "Accept",
-                "Origin",
-                "X-Requested-With",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"
-        ));
-        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

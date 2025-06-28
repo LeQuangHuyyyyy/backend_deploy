@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class ProductInCartRequest {
     private int productId;
+    private int workshopId;
     private String productName;
     private int quantity;
     private double price;

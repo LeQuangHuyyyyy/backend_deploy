@@ -72,7 +72,7 @@ jobs:
           fi
 
           echo "🔍 Kiểm tra file jar..."
-          latest_jar=$(ls /home/${USER}/spring-app/target/*.jar 2>/dev/null || true)
+          latest_jar=$(ls /home/${USER}/spring-app/BE/target/*.jar 2>/dev/null || true)
           if [ -z "$latest_jar" ]; then
             echo "❌ Không tìm thấy file JAR!"
             exit 1

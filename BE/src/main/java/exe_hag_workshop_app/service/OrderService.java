@@ -18,6 +18,11 @@ import java.util.List;
 public interface OrderService {
     List<OrderRequest> getAllOrders();
 
+    List<OrderRequest> getAllOrdersSuccess();
+
+
+    List<OrderRequest> getAllOrdersSuccessByInstructor(int instructorId);
+
     OrderRequest getOrderById(int orderId) throws ResourceNotFoundException;
 
     ObjectNode createOrder(CreateOrderRequest order) throws OrderValidationException;

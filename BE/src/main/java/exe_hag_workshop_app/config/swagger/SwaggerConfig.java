@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration
-@CrossOrigin(origins = "*")
 public class SwaggerConfig {
 
     @Bean

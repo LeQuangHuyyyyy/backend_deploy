@@ -51,6 +51,9 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private WorkshopRepository workshopRepository;
 
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
     private void validateOrder(OrderDTO orderDTO) throws OrderValidationException {
         if (orderDTO.getUserId() <= 0) {
             throw new OrderValidationException("Invalid user ID");
@@ -83,6 +86,58 @@ public class OrderServiceImp implements OrderService {
             request.setProductInCartRequests(productInCartList);
             return request;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderRequest> getAllOrdersSuccess() {
+        Users user = userRepository.findById(jwtTokenHelper.getUserIdFromToken()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return orderRepository.findByUser_UserIdAndStatus(user.getUserId(), OrderStatus.COMPLETED).stream().map(o -> {
+            OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(o, request);
+            request.setPhoneNumber(user.getPhoneNumber());
+            request.setCustomerName(user.getFirstName() + " " + user.getLastName());
+            request.setCustomerEmail(user.getEmail());
+
+
+            List<ProductInCartRequest> productInCartList = o.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                re.setPrice(od.getUnitPrice());
+                if (od.getWorkshop() != null) {
+                    re.setWorkshopId(od.getWorkshop().getWorkshopId());
+                }
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderRequest> getAllOrdersSuccessByInstructor(int instructorId) {
+        Users instructor = userRepository.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Instructor not found"));
+
+        return orderRepository.findByOrderDetails_Workshop_Instructor(instructor).stream().map(o -> {
+            OrderRequest request = new OrderRequest();
+            BeanUtils.copyProperties(o, request);
+
+            List<ProductInCartRequest> productInCartList = o.getOrderDetails().stream().map(od -> {
+                ProductInCartRequest re = new ProductInCartRequest();
+                re.setProductId(od.getProduct().getProductId());
+                re.setProductName(od.getProduct().getProductName());
+                re.setQuantity(od.getQuantity());
+                return re;
+            }).collect(Collectors.toList());
+
+            request.setProductInCartRequests(productInCartList);
+            return request;
+        }).collect(Collectors.toList());
+
     }
 
     @Override
@@ -125,18 +180,22 @@ public class OrderServiceImp implements OrderService {
         Orders finalOrder = order;
 
         List<OrderDetails> orderDetails = new ArrayList<>();
+
         OrderDetails od = new OrderDetails();
         od.setOrder(finalOrder);
         od.setUnitPrice(order.getTotalAmount());
+        od.setWorkshop(workshopRepository.findById(orderRequest.getWorkshopId()).orElseThrow(() -> new ResourceNotFoundException("Workshop not found with ID: " + orderRequest.getWorkshopId())));
 
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
+        orderDetailRepository.save(od);
 
 
         try {
-            final String returnUrl = "http://localhost:8080/api/orders/payment/success?orderId=" + order.getOrderId();
-            final String cancelUrl = "http://localhost:8080/api/orders/cancel?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
+            final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
             final double price = w.getPrice();
+
 
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
@@ -161,22 +220,27 @@ public class OrderServiceImp implements OrderService {
         Cart cart = cartRepository.findById(orderRequest.getCartId()).orElseThrow(() -> new ResourceNotFoundException("Cart"));
         String phoneNumber = jwtTokenHelper.getUserPhoneFromToken();
         Users user = userRepository.findById(cart.getUser().getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Discounts discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
+
+        // Chỉ tìm discount nếu discountId > 0 (có giá trị hợp lệ)
+        Discounts discounts = null;
+        if (orderRequest.getDiscountId() > 0) {
+            discounts = discountRepository.findById(orderRequest.getDiscountId()).orElse(null);
+        }
 
         Orders order = new Orders();
+        double totalAmount = cart.getTotalAmount();
 
+        // Tính toán totalAmount với discount nếu có
         if (discounts != null) {
             int percentDiscount = discounts.getDiscountPercentage();
-            order.setTotalAmount(cart.getTotalAmount() * (percentDiscount / 100.0));
-        } else {
-            order.setTotalAmount(cart.getTotalAmount());
+            totalAmount = cart.getTotalAmount() * (1 - percentDiscount / 100.0);
         }
 
         order.setOrderDate(new Date());
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
         order.setShippingAddress(orderRequest.getShippingAddress());
-        order.setTotalAmount(cart.getTotalAmount());
+        order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.PENDING);
         order.setPhoneNumber(phoneNumber);
         order.setDiscounts(discounts);
@@ -210,13 +274,12 @@ public class OrderServiceImp implements OrderService {
 
         request.setProductInCartRequests(productInCartList);
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            final String returnUrl = "https://hagworkshop.site/api/orders/payment/success?orderId=" + order.getOrderId();
+            final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
             final String cancelUrl = "https://hagworkshop.site/api/orders/cancel?orderId=" + order.getOrderId();
-            final int price = (int) cart.getTotalAmount();
+            final int price = (int) totalAmount; // Sử dụng totalAmount đã tính toán với discount
 
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
@@ -310,12 +373,21 @@ public class OrderServiceImp implements OrderService {
         return orderRepository.findByUser_UserId(userId).stream().map(order -> {
             OrderRequest request = new OrderRequest();
             BeanUtils.copyProperties(order, request);
+            request.setShippingAddress(order.getShippingAddress());
+            request.setPhoneNumber(order.getPhoneNumber());
+            request.setCustomerName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+            request.setCustomerEmail(order.getUser().getEmail());
+
 
             List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
                 ProductInCartRequest re = new ProductInCartRequest();
                 re.setProductId(od.getProduct().getProductId());
                 re.setProductName(od.getProduct().getProductName());
                 re.setQuantity(od.getQuantity());
+                re.setPrice(od.getProduct().getPrice());
+                if (od.getWorkshop() != null) {
+                    re.setWorkshopId(od.getWorkshop().getWorkshopId());
+                }
                 return re;
             }).collect(Collectors.toList());
 

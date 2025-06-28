@@ -1,6 +1,7 @@
 package exe_hag_workshop_app.entity;
 
 
+import exe_hag_workshop_app.entity.Enums.MarketingCampaignType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,10 @@ public class MarketingCampaigns {
 
     @Column(name = "detail")
     private String detail;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private MarketingCampaignType status;
 
     @Column(name = "start_date")
     private Date startDate;

@@ -23,7 +23,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*")
 public class OrderController {
 
     @Autowired
@@ -56,6 +55,26 @@ public class OrderController {
             return new ResponseEntity<>(order, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("order-success")
+    public ResponseEntity<?> getOrderSuccess() {
+        try {
+            List<OrderRequest> orders = orderService.getAllOrdersSuccess();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("order-success-instructor/{id}")
+    public ResponseEntity<?> getOrderSuccessByInstructor(@PathVariable("id") int instructorId) {
+        try {
+            List<OrderRequest> orders = orderService.getAllOrdersSuccess();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -101,10 +120,6 @@ public class OrderController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-//
-//
-//
-//
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getOrdersByUser(@PathVariable("userId") int userId) {
