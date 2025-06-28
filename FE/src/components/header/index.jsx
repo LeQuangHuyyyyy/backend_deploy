@@ -59,6 +59,9 @@ const Header = () => {
   const handleNavigateContactUsPage = () => {
     navigate("/contact-us");
   };
+  const handleNavigateWorkshopPage = () => {
+    navigate("/workshop");
+  };
   return (
     <>
       <div className="header">
@@ -73,8 +76,8 @@ const Header = () => {
           <ul className="header__menu">
             <li onClick={handleNavigateHomePage}>Home</li>
             <li onClick={handleNavigateProductsPage}>Product</li>
+            <li onClick={handleNavigateWorkshopPage}>Workshop</li>
             <li onClick={handleNavigateServicesPage}>Services</li>
-            <li onClick={handleNavigatePagesPage}>Pages</li>
             <li onClick={handleNavigateBlogPage}>Social</li>
             <li onClick={handleNavigateContactUsPage}>Contact Us</li>
           </ul>

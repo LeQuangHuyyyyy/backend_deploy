@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
@@ -34,8 +34,13 @@ import OrderFailed from "./pages/order-failed";
 import SocialPage from "./pages/SocialPage";
 import LayoutSocial from "./components/layoutsocial";
 import SocialGroup from "./pages/SocialGroup";
+import ManageDiscount from "./pages/manage-discount";
+import Dashboard from "./pages/dashboard";
+import DashboardStatistic from "./pages/dashboard-statistics";
+
 
 function App() {
+  const role = localStorage.getItem("role");
   const router = createBrowserRouter([
     {
       path: "/",
@@ -158,6 +163,20 @@ function App() {
     {
       path: "/loginAndRegister",
       element: <LoginAndRegister />,
+    },
+    {
+      path: "/dashboard",
+      element: role === "USER" || role === "INSTRUCTOR" ? <Navigate to={"/"} replace /> : <Dashboard />,
+      children: [
+        {
+          path: "/dashboard/manage-discount",
+          element: <ManageDiscount />,
+        },
+        {
+          path: "/dashboard/",
+          element: <DashboardStatistic />,
+        },
+      ],
     },
   ]);
 

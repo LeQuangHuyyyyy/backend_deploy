@@ -18,6 +18,7 @@ import {
   Tooltip,
   DatePicker,
   Image,
+  Pagination,
 } from "antd";
 import {
   UploadOutlined,
@@ -76,6 +77,8 @@ const MarketingPage = () => {
   //const [urlImage, setUrlImage] = useState("");
   const [categories, setCategories] = useState([]);
   const [videoUrl, setVideoUrl] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
   // Temporary mock data for testing
   //useEffect(() => {
   // Mock workshops data
@@ -150,7 +153,7 @@ const MarketingPage = () => {
   // Xử lý preview khi click vào ảnh
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+      file.preview = await getBase4(file.originFileObj);
     }
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
@@ -615,6 +618,11 @@ const MarketingPage = () => {
       ? campaigns
       : campaigns.filter((campaign) => campaign.type === activeTab);
 
+  const paginatedCampaigns = filteredCampaigns.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   const stats = {
     totalCampaigns: campaigns.length,
     activeCampaigns: campaigns.filter((c) => c.status === "active").length,
@@ -698,12 +706,23 @@ const MarketingPage = () => {
         </div>
 
         <div className="campaigns-grid">
-          {filteredCampaigns.length ? (
-            filteredCampaigns.map(renderCampaignCard)
+          {paginatedCampaigns.length ? (
+            paginatedCampaigns.map(renderCampaignCard)
           ) : (
             <div className="empty-list">No campaigns found.</div>
           )}
         </div>
+        {filteredCampaigns.length > pageSize && (
+          <div style={{ textAlign: "center", marginTop: 24 }}>
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={filteredCampaigns.length}
+              onChange={setCurrentPage}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </div>
 
       <Modal
