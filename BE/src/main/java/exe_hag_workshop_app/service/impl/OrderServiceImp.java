@@ -188,6 +188,7 @@ public class OrderServiceImp implements OrderService {
 
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
+        orderDetailRepository.save(od);
 
 
         try {
