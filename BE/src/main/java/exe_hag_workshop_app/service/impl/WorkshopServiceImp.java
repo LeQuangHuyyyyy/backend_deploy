@@ -121,6 +121,7 @@ public class WorkshopServiceImp implements WorkshopService {
         workshops.setCreateAt(new Date());
         workshops.setUpdateAt(new Date());
         workshops.setUserAccess(0);
+        workshops.setQuantityAccess(0L);
 
         workshops.setInstructor(userRepo.findById(instructorId).orElseThrow(() -> new ResourceNotFoundException("Workshop not found")));
 
@@ -199,7 +200,7 @@ public class WorkshopServiceImp implements WorkshopService {
 
     @Override
     public Page<WorkshopResponse> getWorkshopsByPriceRange(double minPrice, double maxPrice, Pageable pageable) {
-        Page<Workshops> workshopPage = workshopRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+        Page<Workshops> workshopPage = workshopRepository.findByPriceGreaterThanEqualAndPriceLessThanEqual(minPrice, maxPrice, pageable);
         return workshopPage.map(this::convertToWorkshopResponse);
     }
 

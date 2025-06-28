@@ -19,6 +19,9 @@ public interface WorkshopRepository extends JpaRepository<Workshops, Integer> {
 
     Page<Workshops> findByPriceBetween(double minPrice, double maxPrice, Pageable pageable);
 
+    Page<Workshops> findByPriceGreaterThanEqualAndPriceLessThanEqual(double minPrice, double maxPrice, Pageable pageable);
+
+
     Page<Workshops> findByWorkshopTitleContainingIgnoreCase(String keyword, Pageable pageable);
 
     @Query("SELECT w FROM Workshops w JOIN w.schedules s WHERE s.startTime > :currentDate")
