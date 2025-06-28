@@ -51,6 +51,9 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private WorkshopRepository workshopRepository;
 
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
     private void validateOrder(OrderDTO orderDTO) throws OrderValidationException {
         if (orderDTO.getUserId() <= 0) {
             throw new OrderValidationException("Invalid user ID");
@@ -177,12 +180,15 @@ public class OrderServiceImp implements OrderService {
         Orders finalOrder = order;
 
         List<OrderDetails> orderDetails = new ArrayList<>();
+
         OrderDetails od = new OrderDetails();
         od.setOrder(finalOrder);
         od.setUnitPrice(order.getTotalAmount());
         od.setWorkshop(w);
+
         order.setOrderDetails(orderDetails);
         order = orderRepository.save(order);
+        orderDetailRepository.save(od);
 
         try {
             final String returnUrl = "https://hagworkshop.site/api/orders/success?orderId=" + order.getOrderId();
@@ -370,7 +376,6 @@ public class OrderServiceImp implements OrderService {
             request.setPhoneNumber(order.getPhoneNumber());
             request.setCustomerName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
             request.setCustomerEmail(order.getUser().getEmail());
-
 
 
             List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
