@@ -366,12 +366,22 @@ public class OrderServiceImp implements OrderService {
         return orderRepository.findByUser_UserId(userId).stream().map(order -> {
             OrderRequest request = new OrderRequest();
             BeanUtils.copyProperties(order, request);
+            request.setShippingAddress(order.getShippingAddress());
+            request.setPhoneNumber(order.getPhoneNumber());
+            request.setCustomerName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+            request.setCustomerEmail(order.getUser().getEmail());
+
+
 
             List<ProductInCartRequest> productInCartList = order.getOrderDetails().stream().map(od -> {
                 ProductInCartRequest re = new ProductInCartRequest();
                 re.setProductId(od.getProduct().getProductId());
                 re.setProductName(od.getProduct().getProductName());
                 re.setQuantity(od.getQuantity());
+                re.setPrice(od.getProduct().getPrice());
+                if (od.getWorkshop() != null) {
+                    re.setWorkshopId(od.getWorkshop().getWorkshopId());
+                }
                 return re;
             }).collect(Collectors.toList());
 

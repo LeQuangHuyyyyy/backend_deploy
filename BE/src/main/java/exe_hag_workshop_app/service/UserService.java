@@ -5,6 +5,9 @@ import exe_hag_workshop_app.dto.UserDTO;
 import exe_hag_workshop_app.entity.Enums.Roles;
 import exe_hag_workshop_app.payload.UpdateUserRequest;
 import exe_hag_workshop_app.exception.UserValidationException;
+import exe_hag_workshop_app.payload.WorkshopResponse;
+
+import java.util.List;
 
 public interface UserService {
     AuthResponse getAuth() throws Exception;
@@ -16,4 +19,7 @@ public interface UserService {
     UserDTO updateUserRole(String email, Roles role) throws UserValidationException;
 
     UserDTO getUserById(int userId);
+
+
+    List<WorkshopResponse> getOrdersWorkShopByUserId();
 }

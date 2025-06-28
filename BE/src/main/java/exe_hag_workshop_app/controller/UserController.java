@@ -53,4 +53,13 @@ public class UserController {
         dto.setActive(user.isActive());
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("getOrdersWorkShopByUserId")
+    public ResponseEntity<?> getOrdersWorkShopByUserId() {
+        try {
+            return ResponseEntity.ok(userService.getOrdersWorkShopByUserId());
+        } catch (UserValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
