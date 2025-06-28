@@ -88,7 +88,7 @@ const WorkshopDetails = () => {
                 ? formatTimeRange(data1.schedules[0].startTime)
                 : "Đang cập nhật"}
             </div>
-            {data1.schedules && data1.schedules.length > 0 && (
+            {data1.schedules && data1.schedules.length -1 > 0 && (
               <div
                 className="ticket-banner__more-date"
                 style={{ cursor: "pointer" }}
@@ -96,7 +96,7 @@ const WorkshopDetails = () => {
                   ticketInfoRef.current?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                + {data1.schedules.length} ngày khác
+                + {data1.schedules.length -1} ngày khác
               </div>
             )}
 

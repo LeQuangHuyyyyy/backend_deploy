@@ -1,8 +1,10 @@
 import React from "react";
 import { Input, Button, Form } from "antd";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
 
 const ActivateWorkshopOwner = () => {
+  const navigate = useNavigate();
   return (
     <div className="activate-bg">
       <div className="activate-card">
@@ -21,7 +23,7 @@ const ActivateWorkshopOwner = () => {
             
             <div className="activate-actions">
               <Button className="brown-btn">Quay Về</Button>
-              <Button className="brown-btn" type="primary">Tiếp theo </Button>
+              <Button className="brown-btn" type="primary" onClick={() => navigate("/dashboardInstructor")}>Tiếp theo </Button>
             </div>
           </Form>
         </div>

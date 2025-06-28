@@ -1,8 +1,19 @@
+// Màu chủ đạo dashboard-template
+$sidebar-bg: #234032;
+$sidebar-text: #fff;
+$main-bg: #f9f6f2;
+$card-bg: #fff;
+$card-border-radius: 16px;
+$button-bg: #f6d48f;
+$button-text: #234032;
+$button-hover-bg: #eec97a;
+$title-text: #234032;
+
 .dashboard-container {
   padding: 24px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: $main-bg;
+  border-radius: $card-border-radius;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
 .dashboard-header {
@@ -14,24 +25,32 @@
 
 /* Tiêu đề đẹp hơn */
 .dashboard-title {
-  background-color: #2968a7;
+  background: $button-bg;
   border-radius: 12px 12px 0 0;
   display: inline-block;
   padding: 0px 20px;
   .text {
     font-size: 23px;
-    font-weight: 400;
-    color: #fff;
+    font-weight: 500;
+    color: $title-text;
   }
 }
 
 /* Nút Create New Brand */
 .btn-create {
-  background-color: #0056b3;
-  border-color: #0056b3;
-  color: #fff;
+  background: $button-bg;
+  border-color: $button-bg;
+  color: $button-text;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
+  border-radius: 24px;
+  padding: 10px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  &:hover {
+    background: $button-hover-bg;
+    border-color: $button-hover-bg;
+    color: $button-text;
+  }
 }
 
 /* Xử lý text quá dài trong bảng */
@@ -45,37 +64,50 @@
 /* Scroll ngang khi có quá nhiều cột */
 .ant-table {
   overflow-x: auto;
+  background: $card-bg;
+  border-radius: $card-border-radius;
 }
-.ant-modal {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
+.ant-table-thead > tr > th {
+  background: $sidebar-bg;
+  color: $sidebar-text;
+  font-weight: bold;
+  text-align: center;
+  font-size: 16px;
+}
+
+.ant-table-tbody > tr > td {
+  text-align: center;
+  font-size: 15px;
+  color: $title-text;
+}
+
+.ant-modal {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   .ant-modal-content {
     padding: 24px;
-    background: #f9f9f9;
-    border-radius: 12px;
+    background: #fff;
+    border-radius: 16px;
   }
-
   .ant-modal-header {
     width: 90%;
     margin: 0 auto;
-    background: #1890ff;
-    color: white;
-    border-radius: 12px 12px 0 0;
+    background: $button-bg;
+    color: $title-text;
+    border-radius: 16px 16px 0 0;
     text-align: center;
     font-size: 18px;
     font-weight: bold;
     padding: 16px;
   }
-
   .ant-modal-title {
-    color: white;
+    color: $title-text;
   }
-
   .ant-modal-body {
     padding: 24px;
-    background: white;
+    background: #fff;
   }
 }
 
@@ -85,31 +117,27 @@
   justify-content: space-between;
   padding: 16px 24px;
   background: #f1f1f1;
-  border-radius: 0 0 12px 12px;
-
+  border-radius: 0 0 16px 16px;
   .cancel-btn {
-    background: #ff4d4f;
-    color: white;
+    background: #e96a6a;
+    color: #fff;
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
     font-weight: bold;
-
     &:hover {
-      background: #d9363e;
+      background: #c94a4a;
     }
   }
-
   .submit-btn {
-    background: #52c41a;
-    color: white;
+    background: $button-bg;
+    color: $button-text;
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
     font-weight: bold;
-
     &:hover {
-      background: #389e0d;
+      background: $button-hover-bg;
     }
   }
 }
@@ -118,60 +146,66 @@
 .ant-form-item {
   label {
     font-weight: 600;
-    color: #333;
+    color: $title-text;
   }
-
   input {
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 10px;
+    font-size: 16px;
   }
-
   .ant-select {
-    border-radius: 6px;
+    border-radius: 8px;
   }
 }
+
 // Nút Update - Xanh dương gradient
 .btn-update {
-  background: linear-gradient(135deg, #3d8bff, #1e6ef2); // Gradient xanh dương
-  color: white;
+  background: $sidebar-bg;
+  color: #fff;
   border: none;
-  border-radius: 50px;
-  padding: 12px 24px;
+  border-radius: 24px;
+  padding: 10px 24px;
   font-weight: bold;
   font-size: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Hiệu ứng nổi
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   .anticon {
     font-size: 18px;
-    background: white;
-    color: #1e6ef2;
+    background: #fff;
+    color: $sidebar-bg;
     border-radius: 50%;
     padding: 6px;
+  }
+  &:hover {
+    background: #1d3327;
+    color: #fff;
   }
 }
 
 // Nút Delete - Đỏ cam gradient
 .btn-delete {
-  background: linear-gradient(135deg, #ff5a5a, #e04848); // Gradient đỏ cam
-  color: linear-gradient(135deg, #e04848, #c93737);
+  background: #e96a6a;
+  color: #fff;
   border: none;
-  border-radius: 50px;
-  padding: 12px 24px;
+  border-radius: 24px;
+  padding: 10px 24px;
   font-weight: bold;
   font-size: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   .anticon {
     font-size: 18px;
-    background: white;
-    color: #e04848;
+    background: #fff;
+    color: #e96a6a;
     border-radius: 50%;
     padding: 6px;
+  }
+  &:hover {
+    background: #c94a4a;
+    color: #fff;
   }
 }

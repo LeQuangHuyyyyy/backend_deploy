@@ -1,0 +1,122 @@
+// Màu chủ đạo
+$sidebar-bg: #234032;
+$sidebar-text: #fff;
+$sidebar-active-bg: #1d3327;
+$sidebar-hover-bg: #2e5742;
+$main-bg: #f9f6f2;
+$card-bg: #fff;
+$card-border-radius: 16px;
+$button-bg: #f6d48f;
+$button-text: #234032;
+$button-hover-bg: #eec97a;
+
+.ant-layout {
+  background: $main-bg !important;
+}
+
+.ant-layout-sider {
+  background: $sidebar-bg !important;
+  color: $sidebar-text !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+}
+
+.admin-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0 24px 0;
+  flex-direction: column;
+  background: $sidebar-bg;
+  color: $sidebar-text;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  .admin-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    color: $sidebar-text;
+  }
+}
+
+.ant-menu {
+  background: $sidebar-bg !important;
+  color: $sidebar-text !important;
+  font-size: 18px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  .ant-menu-item {
+    border-radius: 12px !important;
+    overflow: hidden;
+    margin: 8px 12px;
+    color: $sidebar-text !important;
+    transition: background 0.3s, color 0.3s;
+    &:hover {
+      background: $sidebar-hover-bg !important;
+      color: $button-bg !important;
+    }
+    &.ant-menu-item-selected {
+      background: $sidebar-active-bg !important;
+      color: $button-bg !important;
+      font-weight: 600;
+    }
+    a {
+      color: inherit !important;
+    }
+  }
+}
+
+.ant-layout-content {
+  background: transparent !important;
+  padding: 32px 24px;
+}
+
+.card,
+.ant-card {
+  background: $card-bg !important;
+  border-radius: $card-border-radius !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.ant-btn,
+button {
+  background: $button-bg !important;
+  color: $button-text !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+  &:hover,
+  &:focus {
+    background: $button-hover-bg !important;
+    color: $button-text !important;
+  }
+}
+
+.ant-input,
+.ant-select-selector {
+  border-radius: 8px !important;
+  font-size: 16px;
+}
+
+.ant-layout-sider-collapsed .admin-text {
+  display: none;
+}
+
+// Ghi đè màu xanh dương của menu sidebar
+.ant-menu .ant-menu-item,
+.ant-menu .ant-menu-submenu-title {
+  color: #f9f6f2 !important;
+}
+
+.ant-menu .ant-menu-item-selected,
+.ant-menu .ant-menu-submenu-title.ant-menu-item-selected {
+  color: #f9f6f2 !important;
+}
+
+.ant-menu .ant-menu-item a,
+.ant-menu .ant-menu-submenu-title a {
+  color: #f9f6f2 !important;
+}

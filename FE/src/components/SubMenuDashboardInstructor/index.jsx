@@ -169,7 +169,7 @@ function SubMenuDashboardInstructor() {
               {/* Dropdown chọn discount */}
               <Select
                 style={{ width: "100%", marginTop: 10 }}
-                placeholder="Chọn mã giảm giá"
+                placeholder="Chọn workshop"
                 onChange={(value, option) => {
                   setSeletectedDiscount(value);
                   setSelectedDiscountPercentage(option?.data_percentage || 0);

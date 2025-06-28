@@ -87,7 +87,7 @@ const LoginAndRegister = () => {
       if (serverMessage?.includes("Email")) {
         toast.error("Email đã được sử dụng, vui lòng chọn email khác.");
       } else {
-        toast.error("Đăng ký thất bại!");
+        toast.error(serverMessage);
       }
 
       registerForm.resetFields();

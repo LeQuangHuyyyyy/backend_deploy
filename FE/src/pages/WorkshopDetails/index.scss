@@ -1,6 +1,6 @@
 .workshop-page {
   background: linear-gradient(135deg, #fff5ee 0%, #fff 100%);
-  
+
   padding-bottom: 40px;
   font-family: "Inter", Arial, sans-serif;
 }
@@ -313,8 +313,8 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        // position: relative;
-        // overflow: hidden;
+        position: relative;
+        overflow: hidden;
 
         &::before {
           content: "";
@@ -329,7 +329,7 @@
             rgba(255, 255, 255, 0.2),
             transparent
           );
-          //transition: 0.5s;
+          transition: 0.5s;
         }
 
         &:hover {

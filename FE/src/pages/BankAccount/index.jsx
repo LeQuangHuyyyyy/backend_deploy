@@ -3,6 +3,7 @@ import { Form, Input, Button } from "antd";
 import "./index.scss";
 
 export default function BankAccountRegister() {
+  const navigate = useNavigate();
   return (
     <div className="bankacc-wrapper">
       <div className="bankacc-card">
@@ -43,7 +44,7 @@ export default function BankAccountRegister() {
           </Form>
           <div className="bankacc-btn-row">
             <Button className="bankacc-btn bankacc-btn-back">Quay Về</Button>
-            <Button type="primary" className="bankacc-btn bankacc-btn-register">
+            <Button type="primary" className="bankacc-btn bankacc-btn-register" >
               Đăng Kí
             </Button>
           </div>
