@@ -38,6 +38,9 @@ import ManageDiscount from "./pages/manage-discount";
 import Dashboard from "./pages/dashboard";
 import DashboardStatistic from "./pages/dashboard-statistics";
 
+import ManageOrder from "./pages/manage-order";
+
+
 
 function App() {
   const role = localStorage.getItem("role");
@@ -142,6 +145,7 @@ function App() {
               path: "/my-account/history-ticket",
               element: <HistoryTicket />,
             },
+            
           ],
         },
         {
@@ -176,6 +180,12 @@ function App() {
           path: "/dashboard/",
           element: <DashboardStatistic />,
         },
+
+        {
+          path: "/dashboard/manage-order",
+          element: <ManageOrder />,
+        }
+
       ],
     },
   ]);

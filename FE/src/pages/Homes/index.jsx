@@ -32,27 +32,27 @@ function Home() {
   // useEffect(() => {
   //   dataUpcoming();
   // }, []);
-  const suKienData = [
-    { id: 1, image: "/img/youknowwho.png", title: "Sự kiện 1" },
-    { id: 2, image: "/img/youknowwho.png", title: "Sự kiện 2" },
-    { id: 3, image: "/img/youknowwho.png", title: "Sự kiện 3" },
-    { id: 4, image: "/img/youknowwho.png", title: "Sự kiện 4" },
-    { id: 5, image: "/img/youknowwho.png", title: "Sự kiện 5" },
-    { id: 6, image: "/img/youknowwho.png", title: "Sự kiện 6" },
-    // ...
-  ];
+  // const suKienData = [
+  //   { id: 1, image: "/img/youknowwho.png", title: "Sự kiện 1" },
+  //   { id: 2, image: "/img/youknowwho.png", title: "Sự kiện 2" },
+  //   { id: 3, image: "/img/youknowwho.png", title: "Sự kiện 3" },
+  //   { id: 4, image: "/img/youknowwho.png", title: "Sự kiện 4" },
+  //   { id: 5, image: "/img/youknowwho.png", title: "Sự kiện 5" },
+  //   { id: 6, image: "/img/youknowwho.png", title: "Sự kiện 6" },
+  //   // ...
+  // ];
   const suKienData1 = [
     {
       id: 1,
       link: "https://chat.openai.com/",
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 1",
       video:
-        "https://www.youtube.com/shorts/uGPjAtzCNrY",
+        "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
     },
     {
       id: 2,
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 2",
       link: "https://chat.openai.com/",
       video:
@@ -61,7 +61,7 @@ function Home() {
     {
       id: 3,
       link: "https://chat.openai.com/",
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 3",
       video:
         "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
@@ -69,7 +69,7 @@ function Home() {
     {
       id: 4,
       link: "https://chat.openai.com/",
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 4",
       video:
         "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
@@ -77,7 +77,7 @@ function Home() {
     {
       id: 5,
       link: "https://chat.openai.com/",
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 5",
       video:
         "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
@@ -85,7 +85,7 @@ function Home() {
     {
       id: 6,
       link: "https://chat.openai.com/",
-      image: "/img/aaaa.png",
+      image: "/img/youknowwho.png",
       title: "Sự kiện 6",
       video:
         "https://ik.imagekit.io/hp1dcwmpu/sample-video.mp4?updatedAt=1748356033502",
@@ -97,12 +97,12 @@ function Home() {
     try {
       setLoading(true);
       const [upcomingResponse] = await Promise.all([
-        api.get("/workshops/upcoming?page=0&size=10", {
+        api.get("/workshops?page=0&size=10", {
           timeout: 10000, // 10s
         }),
       ]);
-
-      setIsDataUpcoming(upcomingResponse.data?.content );
+      // console.log("Upcoming workshops:", upcomingResponse.data?.content);
+      setIsDataUpcoming(upcomingResponse.data?.content);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -137,7 +137,6 @@ function Home() {
     <div className="home-container">
       <div className="view">
         <div className="block">
-          {" "}
           <MainCarosel data={suKienData1} />
         </div>
         <div className="block">

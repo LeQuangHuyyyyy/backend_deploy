@@ -57,8 +57,9 @@ const Cart = () => {
 
   const fetchDiscountList = async () => {
     try {
-      const response = await api.get("Discount");
-      const discounts = response.data.items;
+      const response = await api.get("discounts/get-all-discounts");
+      const discounts = response.data;
+      console.log(response);
       const filterDiscount = discounts.filter((item) => item.id !== 1);
       setListDiscount(filterDiscount);
     } catch (error) {
@@ -328,14 +329,15 @@ const Cart = () => {
               }}
               disabled={isUpdating}
             >
-              <Option value={null}>Giam 10%</Option>
+           <Option value={null}>Không áp dụng mã</Option>
+
               {listDiscount.map((discount) => (
                 <Option
                   key={discount.id}
                   value={discount.id}
                   data_percentage={discount.percentage}
                 >
-                  {`${discount.code} - Giảm ${discount.percentage}%`}
+                  {`${discount.discountCode} - Giảm ${discount.discountPercentage}%`}
                 </Option>
               ))}
             </Select>
