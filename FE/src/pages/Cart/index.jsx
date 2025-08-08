@@ -329,7 +329,8 @@ const Cart = () => {
               }}
               disabled={isUpdating}
             >
-              <Option value={null}>Không áp dụng mã</Option>
+           <Option value={null}>Không áp dụng mã</Option>
+
               {listDiscount.map((discount) => (
                 <Option
                   key={discount.id}
